@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Procurement & Requests — Financial Management System</title>
+<link rel="stylesheet" href="../css/style.css">
+<link rel="stylesheet" href="../css/dashboard.css">
+<link rel="stylesheet" href="../css/modules.css">
+<link rel="stylesheet" href="../css/forms.css">
+
+</head>
+<body>
+<div class="app-shell">
+  <aside class="sidebar" id="appSidebar">
+    <div class="sidebar-brand">
+      <span class="brand-mark">FMS</span>
+      <div class="brand-text"><strong>Financial Management</strong><span>Bestlink College of the Philippines</span></div>
+    </div>
+    <nav id="sidebarNav"></nav>
+    <div class="sidebar-toggle-row">
+      <button class="icon-btn" id="sidebarToggle" title="Collapse sidebar" aria-label="Collapse sidebar">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+      </button>
+    </div>
+  </aside>
+
+  <div class="main-col">
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="icon-btn mobile-nav-toggle" id="mobileNavToggle" aria-label="Open navigation">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        </button>
+        <div>
+          <div class="topbar-title">Procurement & Requests</div>
+          <div class="topbar-breadcrumb">Financial Management System</div>
+        </div>
+      </div>
+      <div class="topbar-right">
+        <span class="role-chip js-role-label">Role</span>
+        <div class="notif-wrap">
+          <button class="icon-btn" id="notifButton" aria-label="Notifications">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 5 2 6 2 7H4c0-1 2-2 2-7Z"/><path d="M10 20a2 2 0 0 0 4 0"/></svg>
+            <span class="notif-badge" id="notifBadge" hidden>0</span>
+          </button>
+          <div class="notif-panel" id="notifPanel">
+            <div class="notif-panel-head"><strong>Notifications</strong><button id="notifMarkAll">Mark all read</button></div>
+            <div id="notifList"></div>
+          </div>
+        </div>
+        <div class="user-menu-wrap">
+          <button class="user-trigger" id="userMenuButton">
+            <span class="avatar" id="topbarUserInitials">--</span>
+            <span class="user-trigger-text"><strong id="topbarUserName">--</strong><span class="js-role-label">Role</span></span>
+          </button>
+          <div class="user-menu" id="userMenu">
+            <button class="user-menu-item" id="logoutButton">
+              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><path d="M21 12H9"/></svg>
+              Sign out
+            </button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="page-content">
+      <div class="page-header">
+        <div>
+          <h1>Procurement and Financial Requests</h1>
+          <p>Submit and process purchase, reimbursement, and financial requests through review, approval, and completion.</p>
+        </div>
+        <div class="page-header-actions">
+          <button class="btn btn-primary" id="addRequestBtn">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            New Request
+          </button>
+        </div>
+      </div>
+
+      <div class="kpi-strip" id="prKpis"></div>
+
+      <div class="tabs" id="prTabs">
+        <button class="tab-btn active" data-status="">All Requests</button>
+        <button class="tab-btn" data-status="Pending Review">Pending Review</button>
+        <button class="tab-btn" data-status="Approved">Approved</button>
+        <button class="tab-btn" data-status="Procurement Processing">Processing</button>
+        <button class="tab-btn" data-status="Completed">Completed</button>
+        <button class="tab-btn" data-status="Rejected">Rejected</button>
+      </div>
+
+      <div class="card toolbar">
+        <div class="search-input-wrap">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input type="text" id="prSearch" placeholder="Search requester, description, or department...">
+        </div>
+        <select class="filter-select" id="prTypeFilter">
+          <option value="">All Types</option><option>Purchase Request</option><option>Reimbursement</option>
+          <option>Financial Request</option><option>Office Supplies</option><option>Equipment</option><option>Services</option>
+        </select>
+        <button class="btn btn-ghost btn-sm" id="prResetFilters">Reset Filters</button>
+      </div>
+
+      <div class="record-grid" id="prGrid"></div>
+
+      <!-- New Request Modal -->
+      <div class="modal" id="prModal">
+        <div class="modal-dialog wide">
+          <div class="modal-head">
+            <div><h2>New Procurement / Financial Request</h2><p>Submit a request for review and approval.</p></div>
+            <button class="modal-close" data-close-modal="prModal"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+          </div>
+          <form id="prForm">
+            <div class="modal-body">
+              <div class="form-errors" hidden></div>
+              <div class="form-grid">
+                <div class="form-field"><label>Requester<span class="req">*</span></label><input type="text" id="prRequester" required></div>
+                <div class="form-field"><label>Department<span class="req">*</span></label><select id="prDepartment" required></select></div>
+                <div class="form-field"><label>Request Type<span class="req">*</span></label>
+                  <select id="prType" required>
+                    <option>Purchase Request</option><option>Reimbursement</option><option>Financial Request</option>
+                    <option>Office Supplies</option><option>Equipment</option><option>Services</option>
+                  </select>
+                </div>
+                <div class="form-field"><label>Priority</label>
+                  <select id="prPriority"><option>Low</option><option selected>Medium</option><option>High</option><option>Urgent</option></select>
+                </div>
+                <div class="form-field full"><label>Description<span class="req">*</span></label><textarea id="prDescription" required placeholder="Describe what is needed and why"></textarea></div>
+                <div class="form-field"><label>Quantity</label><input type="text" id="prQuantity" placeholder="e.g. 5 units"></div>
+                <div class="form-field"><label>Estimated Cost (₱)<span class="req">*</span></label><input type="number" id="prEstimatedCost" required min="0" step="0.01" data-positive-number placeholder="0.00"></div>
+              </div>
+            </div>
+            <div class="modal-foot">
+              <button type="button" class="btn btn-outline" data-close-modal="prModal">Cancel</button>
+              <button type="submit" class="btn btn-primary">Submit Request</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- Review Modal -->
+      <div class="modal" id="prReviewModal">
+        <div class="modal-dialog">
+          <div class="modal-head">
+            <div><h2>Review Request</h2><p id="prReviewSub"></p></div>
+            <button class="modal-close" data-close-modal="prReviewModal"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+          </div>
+          <form id="prReviewForm">
+            <div class="modal-body">
+              <div class="form-errors" hidden></div>
+              <input type="hidden" id="prReviewId">
+              <div id="prReviewDetails" style="margin-bottom:14px;"></div>
+              <div class="form-field">
+                <label>Remarks</label>
+                <textarea id="prReviewRemarks" placeholder="Optional remarks for the requester"></textarea>
+              </div>
+            </div>
+            <div class="modal-foot">
+              <button type="button" class="btn btn-danger" id="prRejectBtn">Reject</button>
+              <button type="button" class="btn btn-success" id="prApproveBtn">Approve</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<script src="../js/data.js"></script>
+<script src="../js/auth.js"></script>
+<script src="../js/app.js"></script>
+<script src="../js/navigation.js"></script>
+<script src="../js/procurement.js"></script>
+</body>
+</html>
