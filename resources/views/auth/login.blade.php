@@ -182,7 +182,7 @@
       <h2>Sign in to your account</h2>
       <p class="lead">Enter the email and password issued to you by your Administrator.</p>
 
-      @if ($errors->any())
+      @if (isset($errors) && $errors->any())
       <div class="login-error">{{ $errors->first() }}</div>
       @endif
       @if (session('status'))
