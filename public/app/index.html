@@ -7,15 +7,26 @@
   This used to be a role-picker prototype that wrote {role, name} straight
   into localStorage -- anyone could grant themselves Administrator from the
   browser console. That has been replaced with a real Laravel session
-  login at /login (see fms-backend/resources/views/auth/login.blade.php
-  and Auth\LoginController). This page now only exists so a bookmark or
-  stray link to /app/index.html still lands somewhere sensible instead of
-  a 404.
+  login (see resources/views/auth/login.blade.php and Auth\LoginController).
+  This page now only exists so a bookmark, stray link, or post-logout
+  redirect to /app/index.html still lands somewhere sensible instead of a
+  404 -- the redirect target is computed at runtime so it still resolves
+  correctly whether Laravel is hosted at the domain root or under a
+  subdirectory (e.g. XAMPP's /FMS-Prototype/public/index.php).
 -->
-<meta http-equiv="refresh" content="0; url=/login">
-<script>window.location.replace('/login');</script>
+<script>
+  (function () {
+    var pathname = window.location.pathname;
+    var marker = '/public/';
+    var markerIndex = pathname.indexOf(marker);
+    var loginUrl = markerIndex === -1
+      ? '/login'
+      : pathname.slice(0, markerIndex + marker.length) + 'index.php/login';
+    window.location.replace(loginUrl);
+  })();
+</script>
 </head>
 <body>
-  <p>Redirecting to sign in&hellip; if this does not happen automatically, <a href="/login">click here</a>.</p>
+  <p>Redirecting to sign in&hellip; if this does not happen automatically, <a href="../index.php/login">click here</a>.</p>
 </body>
 </html>

@@ -33,7 +33,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware(['auth:sanctum', 'account.active'])->prefix('api')->group(function () {
+Route::middleware(['auth:sanctum', 'account.active'])->group(function () {
 
     Route::get('/me', [MeController::class, 'show']);
     Route::get('/departments', [DepartmentController::class, 'index']);

@@ -32,10 +32,10 @@ let _currentUser = null; // { id, name, email, department, role, roleSlug, permi
 async function fetchCurrentUser() {
   if (_currentUser) return _currentUser;
 
-  const response = await fetch('/api/me', { credentials: 'include', headers: { Accept: 'application/json' } });
+  const response = await fetch(appUrl('api/me'), { credentials: 'include', headers: { Accept: 'application/json' } });
 
   if (response.status === 401) {
-    window.location.href = resolveRootPath() + 'index.html';
+    window.location.href = appUrl('index.php/login');
     return null;
   }
 
@@ -110,7 +110,7 @@ async function enforceModuleAccess(moduleKey) {
 async function logoutUser() {
   await _ensureCsrfCookie();
   const token = _readCookie('XSRF-TOKEN');
-  await fetch('/logout', {
+  await fetch(appUrl('logout'), {
     method: 'POST',
     credentials: 'include',
     headers: { Accept: 'application/json', 'X-XSRF-TOKEN': token || '' }

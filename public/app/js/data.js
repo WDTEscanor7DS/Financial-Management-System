@@ -16,6 +16,18 @@
 
 let _csrfReady = false;
 
+function appUrl(path) {
+  const pathname = window.location.pathname;
+  const publicMarker = '/public/';
+  const markerIndex = pathname.indexOf(publicMarker);
+  const basePath = markerIndex === -1 ? '/' : pathname.slice(0, markerIndex + publicMarker.length);
+  const normalizedPath = String(path).replace(/^\/+/, '');
+  if (markerIndex !== -1 && !normalizedPath.startsWith('index.php/')) {
+    return basePath + 'index.php/' + normalizedPath;
+  }
+  return basePath + normalizedPath;
+}
+
 function _readCookie(name) {
   const match = document.cookie.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)');
   return match ? decodeURIComponent(match.pop()) : null;
@@ -23,7 +35,7 @@ function _readCookie(name) {
 
 async function _ensureCsrfCookie() {
   if (_csrfReady) return;
-  await fetch('/sanctum/csrf-cookie', { credentials: 'include' });
+  await fetch(appUrl('sanctum/csrf-cookie'), { credentials: 'include' });
   _csrfReady = true;
 }
 
@@ -43,7 +55,7 @@ async function _api(method, path, body) {
   const token = _readCookie('XSRF-TOKEN');
   if (token) headers['X-XSRF-TOKEN'] = token;
 
-  const response = await fetch(path, {
+  const response = await fetch(appUrl(path), {
     method,
     headers,
     credentials: 'include',
@@ -51,7 +63,7 @@ async function _api(method, path, body) {
   });
 
   if (response.status === 401) {
-    window.location.href = resolveRootPath() + 'index.html';
+    window.location.href = appUrl('index.php/login');
     throw new ApiError('Not authenticated', 401);
   }
 

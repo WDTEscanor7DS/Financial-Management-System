@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\LoginRequest;
+use App\Models\User;
 use App\Services\AuditService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -24,10 +25,11 @@ class LoginController extends Controller
         // before login gains nothing once this runs.
         $request->session()->regenerate();
 
+        /** @var User $user */
         $user = Auth::user();
         $user->forceFill(['last_login_at' => now()])->save();
 
-        AuditService::log('Login', 'Security & Audit', null, $user->name.' ('.$user->role->name.') signed in.');
+        AuditService::log('Login', 'Security & Audit', null, $user->name . ' (' . $user->role->name . ') signed in.');
 
         return redirect()->intended(route('dashboard'));
     }
@@ -37,7 +39,7 @@ class LoginController extends Controller
         $user = Auth::user();
 
         if ($user) {
-            AuditService::log('Logout', 'Security & Audit', null, $user->name.' ('.$user->role->name.') signed out.');
+            AuditService::log('Logout', 'Security & Audit', null, $user->name . ' (' . $user->role->name . ') signed out.');
         }
 
         Auth::guard('web')->logout();

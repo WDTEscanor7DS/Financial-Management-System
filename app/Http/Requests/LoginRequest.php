@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\User;
 use Illuminate\Auth\Events\Lockout;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
@@ -32,7 +33,7 @@ class LoginRequest extends FormRequest
 
     public function throttleKey(): string
     {
-        return Str::transliterate(Str::lower($this->input('email')).'|'.$this->ip());
+        return Str::transliterate(Str::lower($this->input('email')) . '|' . $this->ip());
     }
 
     public function ensureIsNotRateLimited(): void
@@ -61,7 +62,7 @@ class LoginRequest extends FormRequest
                 'Login Failed',
                 'Security & Audit',
                 null,
-                'Failed login attempt for '.$this->input('email'),
+                'Failed login attempt for ' . $this->input('email'),
                 status: 'Failed'
             );
 
@@ -72,6 +73,7 @@ class LoginRequest extends FormRequest
             ]);
         }
 
+        /** @var User $user */
         $user = Auth::user();
 
         if (! $user->isActive()) {
