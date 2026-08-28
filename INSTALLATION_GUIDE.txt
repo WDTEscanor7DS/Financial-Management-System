@@ -115,3 +115,5 @@ Common Troubleshooting:
 Quick browser access:
 - http://localhost/FMS-Prototype/public
 - http://localhost/FMS-Prototype/public/index.php
+
+If you want, you can also copy this file and send it directly to your friend.
