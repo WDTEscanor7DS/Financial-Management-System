@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Hash;
 /**
  * Section 68: development/testing accounts only. The email domain
  * (example.test) is IANA-reserved for documentation/testing and will never
- * resolve, so these can never be mistaken for real Bestlink addresses.
+ * resolve, so these can never be mistaken for real production addresses.
  *
  * The shared demo password is read from DEMO_USER_PASSWORD in .env (see
  * .env.example) rather than typed directly into this file, so nobody

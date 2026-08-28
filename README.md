@@ -1,4 +1,4 @@
-# Bestlink FMS — Laravel + MySQL Backend
+# Financial Management System Prototype — Laravel + MySQL Backend
 
 This is the database/backend/security layer built around the existing
 Financial Management System frontend prototype. It does not replace or
@@ -41,69 +41,69 @@ what's specific to this system.
    `database/`, `routes/`, `resources/views/auth/`, `bootstrap/app.php`,
    and `.env.example` into it, overwriting the generated defaults:
 
-   ```bash
-   composer create-project laravel/laravel fms-app
-   cd fms-app
-   # copy this delivery's folders in on top, per the list above
-   composer require laravel/sanctum
-   php artisan install:api   # publishes Sanctum config if not already present
-   ```
+    ```bash
+    composer create-project laravel/laravel fms-app
+    cd fms-app
+    # copy this delivery's folders in on top, per the list above
+    composer require laravel/sanctum
+    php artisan install:api   # publishes Sanctum config if not already present
+    ```
 
 2. **Copy the existing static frontend** into `public/app/` so it is
    served as plain static files, side by side with Laravel's own
    `public/index.php`:
 
-   ```bash
-   mkdir -p public/app
-   cp -r ../fms/css ../fms/js ../fms/pages ../fms/index.html public/app/
-   ```
+    ```bash
+    mkdir -p public/app
+    cp -r ../fms/css ../fms/js ../fms/pages ../fms/index.html public/app/
+    ```
 
-   The frontend's relative paths (`../css/style.css`, `../js/data.js`
-   from inside `pages/*.html`) work unchanged no matter where the
-   `css/js/pages` trio is mounted, so no path rewriting is needed here.
+    The frontend's relative paths (`../css/style.css`, `../js/data.js`
+    from inside `pages/*.html`) work unchanged no matter where the
+    `css/js/pages` trio is mounted, so no path rewriting is needed here.
 
 3. **Configure the database**:
 
-   ```bash
-   cp .env.example .env
-   php artisan key:generate
-   # edit .env: DB_DATABASE, DB_USERNAME, DB_PASSWORD, DEMO_USER_PASSWORD
-   ```
+    ```bash
+    cp .env.example .env
+    php artisan key:generate
+    # edit .env: DB_DATABASE, DB_USERNAME, DB_PASSWORD, DEMO_USER_PASSWORD
+    ```
 
-   In phpMyAdmin (bundled with XAMPP) or the `mysql` CLI, create the
-   database named in `.env` (`fms_database` by default) — Laravel's
-   migrator does not create the database itself, only its tables.
+    In phpMyAdmin (bundled with XAMPP) or the `mysql` CLI, create the
+    database named in `.env` (`fms_database` by default) — Laravel's
+    migrator does not create the database itself, only its tables.
 
 4. **Run migrations and seeders**:
 
-   ```bash
-   php artisan migrate
-   php artisan db:seed
-   ```
+    ```bash
+    php artisan migrate
+    php artisan db:seed
+    ```
 
-   `db:seed` runs `RolePermissionSeeder → DepartmentSeeder → UserSeeder`
-   in that order (see `database/seeders/DatabaseSeeder.php`) because
-   users reference both roles and departments. If you ever need to start
-   over from a clean schema: `php artisan migrate:fresh --seed`.
+    `db:seed` runs `RolePermissionSeeder → DepartmentSeeder → UserSeeder`
+    in that order (see `database/seeders/DatabaseSeeder.php`) because
+    users reference both roles and departments. If you ever need to start
+    over from a clean schema: `php artisan migrate:fresh --seed`.
 
 5. **Serve the app**:
 
-   ```bash
-   php artisan serve
-   ```
+    ```bash
+    php artisan serve
+    ```
 
-   Visit `http://127.0.0.1:8000/` — it redirects to `/login`. Sign in
-   with one of the seeded demo accounts (Section 68):
+    Visit `http://127.0.0.1:8000/` — it redirects to `/login`. Sign in
+    with one of the seeded demo accounts (Section 68):
 
-   | Role | Email | Password |
-   |---|---|---|
-   | Administrator | `admin@example.test` | value of `DEMO_USER_PASSWORD` in your `.env` |
-   | Accountant | `accountant@example.test` | same |
-   | College Administrator | `collegeadmin@example.test` | same |
-   | Employee | `employee@example.test` | same |
+    | Role                  | Email                       | Password                                     |
+    | --------------------- | --------------------------- | -------------------------------------------- |
+    | Administrator         | `admin@example.test`        | value of `DEMO_USER_PASSWORD` in your `.env` |
+    | Accountant            | `accountant@example.test`   | same                                         |
+    | College Administrator | `collegeadmin@example.test` | same                                         |
+    | Employee              | `employee@example.test`     | same                                         |
 
-   These are clearly-fictional `.test` addresses (an IANA-reserved,
-   non-resolving TLD), never real Bestlink credentials.
+    These are clearly-fictional `.test` addresses (an IANA-reserved,
+    non-resolving TLD), never real production credentials.
 
 ## Registering middleware on Laravel 10 (if not using the Laravel 11 skeleton)
 
@@ -166,7 +166,6 @@ mutating request in a page load, which is what lets the browser's
 `fetch()` calls carry a valid `X-XSRF-TOKEN` header automatically.
 
 ## Testing
-
 
 ```bash
 php artisan test
