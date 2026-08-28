@@ -1,0 +1,119 @@
+Financial Management System Prototype
+Installation Guide
+
+Requirements:
+- XAMPP 8.2.x
+- Composer
+- GitHub project ZIP
+- VS Code (recommended)
+
+1) Install XAMPP
+- Download: https://www.apachefriends.org/download.html
+- Install XAMPP and make sure Apache and MySQL are included.
+- Tutorial: https://www.youtube.com/watch?v=SFGOYBlArhQ
+
+2) Install Composer
+- Download: https://getcomposer.org/
+- Tutorial: https://www.youtube.com/watch?v=-3Xz7tuKyMI
+- Restart your computer if needed.
+
+3) Download the project from GitHub
+- Open the GitHub repository
+- Click the green Code button
+- Select Download ZIP
+
+4) Extract the project
+- Extract the ZIP file
+- Move the extracted folder to:
+  C:\xampp\htdocs\
+- The folder should be:
+  C:\xampp\htdocs\FMS-Prototype
+
+5) Start Apache and MySQL
+- Open XAMPP Control Panel
+- Start Apache
+- Start MySQL
+- If port 80 or 3306 is busy, stop the service using it first.
+
+6) Create the database
+- Open your browser and go to:
+  http://localhost/phpmyadmin
+- Create a new database, for example:
+  fms_database
+
+7) Open the project in VS Code
+- Open VS Code
+- File > Open Folder
+- Select:
+  C:\xampp\htdocs\FMS-Prototype
+
+8) Install PHP dependencies
+- Open the terminal in VS Code
+- Run:
+  composer install
+
+9) Configure the environment file
+- Copy .env.example to .env
+- Open .env and make sure the database settings are:
+
+  DB_CONNECTION=mysql
+  DB_HOST=127.0.0.1
+  DB_PORT=3306
+  DB_DATABASE=fms_database
+  DB_USERNAME=root
+  DB_PASSWORD=
+
+- Then generate the application key:
+  php artisan key:generate
+
+10) Run migrations and seed the database
+- In the terminal, run:
+  php artisan migrate --seed
+
+11) Start the app
+- In the terminal, run:
+  php artisan serve
+- Then open in browser:
+  http://localhost:8000
+
+- Or use the XAMPP folder method:
+  http://localhost/FMS-Prototype/public
+
+12) Login Accounts
+Default demo accounts:
+
+Administrator
+- Email: admin@example.test
+- Password: Str0ngDemoPass!
+
+Accountant
+- Email: accountant@example.test
+- Password: Str0ngDemoPass!
+
+College Administrator
+- Email: collegeadmin@example.test
+- Password: Str0ngDemoPass!
+
+Employee
+- Email: employee@example.test
+- Password: Str0ngDemoPass!
+
+Notes:
+- These are demo/test accounts for local development only.
+- The password is set in the .env file as DEMO_USER_PASSWORD.
+- If you change the password in .env, use that updated value when logging in.
+
+Common Troubleshooting:
+- If Composer is not recognized, restart VS Code or your computer.
+- If the app cannot connect to MySQL, check Apache and MySQL are running in XAMPP.
+- If the database is not found, make sure the database name in .env matches the database created in phpMyAdmin.
+- If you get Laravel errors, run:
+  php artisan cache:clear
+  php artisan config:clear
+  php artisan route:clear
+
+Quick browser access:
+- http://localhost/FMS-Prototype/public
+- http://localhost/FMS-Prototype/public/index.php
+
+If you want, you can also copy this file and send it directly to your friend.
