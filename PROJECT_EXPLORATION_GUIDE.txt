@@ -1,0 +1,189 @@
+FMS-Prototype Project Exploration Guide
+
+This file explains how to explore the project safely and where to place new files.
+
+Important rule:
+- Do not edit or delete existing core files unless you are asked to fix or extend the project.
+- If you want to add something new, place it in the proper folder based on its purpose.
+- Do not put new business logic directly inside public/app pages unless it is a frontend UI file.
+
+1) Main project folder
+- FMS-Prototype/
+  This is the root of the project.
+  It contains the Laravel app, configuration, routes, database files, and static frontend pages.
+
+2) Where the main app code lives
+- app/
+  This folder contains the project logic.
+
+  Important subfolders:
+  - app/Models/
+    Database models such as User, Budget, Revenue, Expense, Asset, etc.
+    Put model changes here when adding or updating database entities.
+
+  - app/Http/Controllers/
+    Controllers for handling routes and requests.
+    Use this folder for login, dashboard logic, API endpoints, and page actions.
+
+  - app/Http/Middleware/
+    Handles authentication, permissions, and access checks.
+    This is where role and security logic belongs.
+
+  - app/Http/Requests/
+    Validation rules for forms and API requests.
+    Place new request validation files here.
+
+  - app/Services/
+    Business logic and application rules.
+    For example: finance operations, validation, audit logging, and transaction logic.
+
+  - app/Policies/
+    Rules controlling who can do what.
+    Use this for user and role permission restrictions.
+
+3) Database and data setup
+- database/
+  This is where the database structure and seed data are stored.
+
+  Important subfolders:
+  - database/migrations/
+    Database table definitions.
+    Add new tables or changes here.
+
+  - database/seeders/
+    Initial data for roles, permissions, users, departments, and sample records.
+    Use this for testing/demo data.
+
+  - database/factories/
+    Factory definitions for test data generation.
+
+4) Routes
+- routes/
+  This folder defines how users access pages and APIs.
+
+  Important files:
+  - routes/web.php
+    Browser routes and page navigation
+
+  - routes/api.php
+    API routes for the frontend and backend communication
+
+  If you are adding a new page route or API endpoint, edit here only after checking the existing architecture.
+
+5) Frontend files
+- public/
+  This folder is for browser-accessible files.
+
+  Important subfolders:
+  - public/app/
+    This contains the static HTML/CSS/JS interface pages.
+    Example: pages/dashboard.html, budget.html, revenue.html, etc.
+
+  - public/app/pages/
+    The actual pages for the system UI.
+    Add page files here when creating a new module screen.
+
+  - public/app/css/
+    Stylesheets for the frontend
+
+  - public/app/js/
+    JavaScript behavior for pages and modules
+
+  Important:
+  - Do not add raw business logic in HTML files.
+  - Keep UI code in JS files and data logic in the Laravel backend.
+
+6) Views and Blade templates
+- resources/views/
+  This is where Laravel Blade templates live.
+
+  Important subfolders:
+  - resources/views/auth/
+    Login, forgot password, reset password pages
+
+  If you create a new screen that is server-rendered, put it here.
+
+7) Configuration files
+- config/
+  Laravel configuration files.
+  Example: database, auth, app, mail, session.
+
+  Only modify config files when you are adjusting project-wide settings.
+
+8) Environment variables
+- .env
+  Local project settings such as database name, username, password, and app URL.
+
+  Important:
+  - Do not commit or share your local .env file publicly.
+  - Use .env.example as a template.
+
+9) Tests
+- tests/
+  Automated tests for the project.
+
+  Use this folder for feature and unit testing.
+
+10) Documentation
+- docs/
+  Project requirements, architecture, and design notes.
+  Read these before making changes to understand how the system was designed.
+
+11) Storage and cache
+- storage/
+  Generated files, compiled views, and cache.
+
+  Important:
+  - Do not manually edit files here unless debugging and only if necessary.
+  - These files are usually generated automatically by Laravel.
+
+12) Vendor and dependency files
+- vendor/
+  Composer-installed PHP dependencies.
+
+  Important:
+  - Do not edit files here manually.
+  - Use Composer commands instead.
+
+13) Where to place new features
+If you are adding a new module, follow this pattern:
+- Frontend UI page --> public/app/pages/
+- Frontend script --> public/app/js/
+- Styles --> public/app/css/
+- Validation rules --> app/Http/Requests/
+- API endpoints --> routes/api.php
+- Business logic --> app/Services/
+- Database model --> app/Models/
+- Database table --> database/migrations/
+- Seed data --> database/seeders/
+- Server-rendered page --> resources/views/
+
+14) Safe workflow for your teammate
+- First, read the existing related files before adding anything.
+- Check similar modules (for example, Budget and Revenue) to follow the same structure.
+- Do not create duplicate code or copy-paste without understanding the design.
+- Prefer editing existing files when adding functions to a similar module.
+- Keep changes organized and follow the same naming pattern used by the project.
+
+15) Good starting files to read
+For a new teammate, read these first:
+- README.md
+- routes/api.php
+- routes/web.php
+- app/Http/Middleware/EnsurePermission.php
+- app/Http/Controllers/Auth/LoginController.php
+- database/seeders/RolePermissionSeeder.php
+- public/app/js/auth.js
+- public/app/js/data.js
+
+16) Final reminder
+This project is structured so the system is split between:
+- Frontend UI: public/app/
+- Backend logic: app/
+- Database: database/
+- Routes: routes/
+- Security and roles: app/Http/Middleware/ and app/Policies/
+
+If you follow this structure, the project will remain organized and easier to maintain.
+
+End of guide.
