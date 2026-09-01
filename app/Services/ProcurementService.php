@@ -37,7 +37,7 @@ class ProcurementService
     {
         $target = $decision === 'approve' ? 'Approved' : 'Rejected';
 
-        return DB::transaction(function () use ($requestId, $target, $reviewerId, $remarks) {
+        return DB::transaction(function () use ($requestId, $target, $reviewerId, $remarks, $decision) {
             /** @var ProcurementRequest $request */
             $request = ProcurementRequest::query()->lockForUpdate()->findOrFail($requestId);
 
@@ -82,7 +82,7 @@ class ProcurementService
             }
 
             $request->update(['status' => $target]);
-            AuditService::log('Updated Request Status to '.$target, 'Procurement & Requests', (string) $request->id);
+            AuditService::log('Updated Request Status to ' . $target, 'Procurement & Requests', (string) $request->id);
 
             return $request->refresh();
         });

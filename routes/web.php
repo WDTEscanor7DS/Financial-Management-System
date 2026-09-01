@@ -23,7 +23,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return Auth::check()
-        ? redirect()->to(request()->getSchemeAndHttpHost() . str_replace('\\', '/', rtrim(dirname(request()->getBaseUrl()), '/')) . '/app/pages/dashboard.html?v=20260827')
+        ? redirect('app/pages/dashboard.html?v=20260827')
         : redirect()->route('login');
 });
 
@@ -47,8 +47,6 @@ Route::middleware(['auth', 'account.active'])->group(function () {
     Route::post('/password', [PasswordController::class, 'update'])->name('password.change');
 
     Route::get('/dashboard', function () {
-        // Convenience alias so a bookmarked "/dashboard" (a very natural
-        // guess) reaches the real static dashboard instead of a 404.
-        return redirect()->to(request()->getSchemeAndHttpHost() . str_replace('\\', '/', rtrim(dirname(request()->getBaseUrl()), '/')) . '/app/pages/dashboard.html?v=20260827');
+        return redirect('app/pages/dashboard.html?v=20260827');
     })->name('dashboard');
 });

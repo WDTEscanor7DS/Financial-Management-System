@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Services\AuditService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules\Password;
 
@@ -27,9 +28,9 @@ class PasswordController extends Controller
 
         // Invalidate every other session for this user (logged in on
         // another device, etc.) while keeping the current one alive.
-        auth()->logoutOtherDevices($request->input('current_password'));
+        Auth::logoutOtherDevices($request->input('current_password'));
 
-        AuditService::log('Password Changed', 'Security & Audit', (string) $user->id, $user->name.' changed their password.');
+        AuditService::log('Password Changed', 'Security & Audit', (string) $user->id, $user->name . ' changed their password.');
 
         return back()->with('status', 'Your password has been updated.');
     }
