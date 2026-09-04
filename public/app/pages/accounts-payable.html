@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Accounts Payable — Financial Management System</title>
+<link rel="stylesheet" href="../css/style.css">
+<link rel="stylesheet" href="../css/dashboard.css">
+<link rel="stylesheet" href="../css/modules.css">
+<link rel="stylesheet" href="../css/forms.css">
+
+</head>
+<body>
+<div class="app-shell">
+  <aside class="sidebar" id="appSidebar">
+    <div class="sidebar-brand">
+      <span class="brand-mark">FMS</span>
+      <div class="brand-text"><strong>Financial Management System</strong><span>Prototype</span></div>
+    </div>
+    <nav id="sidebarNav"></nav>
+    <div class="sidebar-toggle-row">
+      <button class="icon-btn" id="sidebarToggle" title="Collapse sidebar" aria-label="Collapse sidebar">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+      </button>
+    </div>
+  </aside>
+
+  <div class="main-col">
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="icon-btn mobile-nav-toggle" id="mobileNavToggle" aria-label="Open navigation">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        </button>
+        <div>
+          <div class="topbar-title">Accounts Payable</div>
+          <div class="topbar-breadcrumb">Financial Management System</div>
+        </div>
+      </div>
+      <div class="topbar-right">
+        <span class="role-chip js-role-label">Role</span>
+        <div class="notif-wrap">
+          <button class="icon-btn" id="notifButton" aria-label="Notifications">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 5 2 6 2 7H4c0-1 2-2 2-7Z"/><path d="M10 20a2 2 0 0 0 4 0"/></svg>
+            <span class="notif-badge" id="notifBadge" hidden>0</span>
+          </button>
+          <div class="notif-panel" id="notifPanel">
+            <div class="notif-panel-head"><strong>Notifications</strong><button id="notifMarkAll">Mark all read</button></div>
+            <div id="notifList"></div>
+          </div>
+        </div>
+        <div class="user-menu-wrap">
+          <button class="user-trigger" id="userMenuButton">
+            <span class="avatar" id="topbarUserInitials">--</span>
+            <span class="user-trigger-text"><strong id="topbarUserName">--</strong><span class="js-role-label">Role</span></span>
+          </button>
+          <div class="user-menu" id="userMenu">
+            <button class="user-menu-item" id="logoutButton">
+              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><path d="M21 12H9"/></svg>
+              Sign out
+            </button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="page-content">
+      <div class="page-header">
+        <div>
+          <h1>Accounts Payable Management</h1>
+          <p>Track vendor invoices, due dates, and payments. Balance is calculated automatically as amount paid changes.</p>
+        </div>
+        <div class="page-header-actions">
+          <button class="btn btn-primary" id="addPayableBtn">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Add Payable
+          </button>
+        </div>
+      </div>
+
+      <div class="aging-grid" id="apAgingGrid"></div>
+
+      <div class="card toolbar">
+        <div class="search-input-wrap">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input type="text" id="apSearch" placeholder="Search vendor, invoice no., or description...">
+        </div>
+        <select class="filter-select" id="apDeptFilter"><option value="">All Departments</option></select>
+        <select class="filter-select" id="apStatusFilter">
+          <option value="">All Statuses</option><option>Pending</option><option>Partially Paid</option><option>Paid</option><option>Overdue</option>
+        </select>
+        <button class="btn btn-ghost btn-sm" id="apResetFilters">Reset Filters</button>
+      </div>
+
+      <div class="card table-card">
+        <div class="table-scroll">
+          <table class="data-table" id="apTable">
+            <thead><tr>
+              <th>AP ID</th><th>Vendor</th><th>Invoice No.</th><th>Due Date</th><th>Department</th>
+              <th class="amount">Amount</th><th class="amount">Paid</th><th class="amount">Balance</th><th>Status</th><th></th>
+            </tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        <div class="table-footer"><span id="apCount"></span></div>
+      </div>
+
+      <!-- Add Payable Modal -->
+      <div class="modal" id="apModal">
+        <div class="modal-dialog wide">
+          <div class="modal-head">
+            <div><h2>Add Payable</h2><p>Record a new vendor invoice or obligation.</p></div>
+            <button class="modal-close" data-close-modal="apModal"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+          </div>
+          <form id="apForm">
+            <div class="modal-body">
+              <div class="form-errors" hidden></div>
+              <div class="form-grid">
+                <div class="form-field"><label>Vendor<span class="req">*</span></label><input type="text" id="apVendor" required placeholder="e.g. Meralco"></div>
+                <div class="form-field"><label>Invoice Number<span class="req">*</span></label><input type="text" id="apInvoiceNo" required placeholder="e.g. INV-88213"></div>
+                <div class="form-field"><label>Invoice Date<span class="req">*</span></label><input type="date" id="apInvoiceDate" required></div>
+                <div class="form-field"><label>Due Date<span class="req">*</span></label><input type="date" id="apDueDate" required data-min-date="apInvoiceDate"></div>
+                <div class="form-field full"><label>Description<span class="req">*</span></label><input type="text" id="apDescription" required placeholder="e.g. August electricity billing"></div>
+                <div class="form-field"><label>Department<span class="req">*</span></label><select id="apDepartment" required></select></div>
+                <div class="form-field"><label>Amount (₱)<span class="req">*</span></label><input type="number" id="apAmount" required min="0" step="0.01" data-positive-number placeholder="0.00"></div>
+              </div>
+            </div>
+            <div class="modal-foot">
+              <button type="button" class="btn btn-outline" data-close-modal="apModal">Cancel</button>
+              <button type="submit" class="btn btn-primary">Save Payable</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- Record Payment Modal -->
+      <div class="modal" id="apPaymentModal">
+        <div class="modal-dialog">
+          <div class="modal-head">
+            <div><h2>Record Payment</h2><p id="apPaymentSub"></p></div>
+            <button class="modal-close" data-close-modal="apPaymentModal"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+          </div>
+          <form id="apPaymentForm">
+            <div class="modal-body">
+              <div class="form-errors" hidden></div>
+              <input type="hidden" id="apPaymentId">
+              <div class="form-static-row"><span>Outstanding Balance</span><span class="val" id="apPaymentBalance"></span></div>
+              <div class="form-field" style="margin-top:14px;">
+                <label>Payment Amount (₱)<span class="req">*</span></label>
+                <input type="number" id="apPaymentAmount" required min="0" step="0.01" data-positive-number placeholder="0.00">
+                <span class="form-hint">Cannot exceed the outstanding balance.</span>
+              </div>
+            </div>
+            <div class="modal-foot">
+              <button type="button" class="btn btn-outline" data-close-modal="apPaymentModal">Cancel</button>
+              <button type="submit" class="btn btn-primary">Record Payment</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<script src="../js/data.js?v=20260827"></script>
+<script src="../js/auth.js?v=20260827"></script>
+<script src="../js/app.js"></script>
+<script src="../js/navigation.js"></script>
+<script src="../js/payable.js"></script>
+</body>
+</html>

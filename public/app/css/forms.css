@@ -1,0 +1,54 @@
+/* ==========================================================================
+   FORM & MODAL STYLES
+   ========================================================================== */
+
+.modal {
+  position: fixed; inset: 0; background: rgba(11, 32, 54, 0.5);
+  display: none; align-items: flex-start; justify-content: center;
+  padding: 5vh 16px; overflow-y: auto; z-index: 100;
+}
+.modal.open { display: flex; }
+.modal-dialog {
+  background: var(--surface); border-radius: var(--radius-lg); box-shadow: var(--shadow-lg);
+  width: 100%; max-width: 560px; overflow: hidden; animation: modalIn 0.16s ease;
+}
+.modal-dialog.wide { max-width: 720px; }
+@keyframes modalIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+.modal-head { display: flex; align-items: center; justify-content: space-between; padding: 18px 22px; border-bottom: 1px solid var(--line); }
+.modal-head h2 { font-size: 16.5px; }
+.modal-head p { font-size: 12px; color: var(--text-muted); margin-top: 3px; }
+.modal-close { background: none; border: none; cursor: pointer; color: var(--text-faint); padding: 4px; border-radius: var(--radius-sm); }
+.modal-close:hover { background: var(--surface-alt); color: var(--text); }
+.modal-close .icon { width: 18px; height: 18px; }
+.modal-body { padding: 20px 22px; max-height: 66vh; overflow-y: auto; }
+.modal-foot { display: flex; justify-content: flex-end; gap: 10px; padding: 16px 22px; border-top: 1px solid var(--line); background: var(--surface-alt); }
+
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.form-field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px; }
+.form-field.full { grid-column: 1 / -1; }
+.form-field label { font-size: 12.3px; font-weight: 600; color: var(--text); }
+.form-field label .req { color: var(--danger); margin-left: 2px; }
+.form-field input, .form-field select, .form-field textarea {
+  padding: 9px 11px; border: 1px solid var(--line-strong); border-radius: var(--radius-sm);
+  font-size: 13px; font-family: inherit; color: var(--text); background: var(--surface);
+}
+.form-field input:focus, .form-field select:focus, .form-field textarea:focus { border-color: var(--teal-600); }
+.form-field input.invalid, .form-field select.invalid, .form-field textarea.invalid { border-color: var(--danger); background: var(--danger-bg); }
+.form-field textarea { resize: vertical; min-height: 70px; }
+.form-hint { font-size: 11px; color: var(--text-faint); }
+
+.form-errors {
+  background: var(--danger-bg); color: var(--danger); border-radius: var(--radius-sm);
+  padding: 12px 14px; font-size: 12.5px; margin-bottom: 16px;
+}
+.form-errors ul { margin: 6px 0 0 16px; padding: 0; }
+.form-errors li { margin-bottom: 2px; }
+
+.form-static-row { display: flex; justify-content: space-between; padding: 8px 0; font-size: 13px; border-bottom: 1px dashed var(--line); }
+.form-static-row:last-child { border-bottom: none; }
+.form-static-row .val { font-family: var(--font-mono); font-weight: 600; }
+
+@media (max-width: 600px) {
+  .form-grid { grid-template-columns: 1fr; }
+}
