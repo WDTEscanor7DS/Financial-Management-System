@@ -18,6 +18,8 @@ use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\GeneralLedgerController;
 use App\Http\Controllers\Api\CashBankController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\EmployeeController;
+use App\Http\Controllers\Api\PayrollController;
 
 /*
 |--------------------------------------------------------------------------
@@ -136,4 +138,13 @@ Route::middleware(['auth:sanctum', 'account.active'])->group(function () {
         Route::post('/users/{user}/send-password-reset', [UserController::class, 'sendPasswordReset']);
         Route::delete('/users/{user}', [UserController::class, 'destroy']);
     });
+
+     // Payroll
+    Route::middleware('permission:view_payroll')->get('/employees', [EmployeeController::class, 'index']);
+    Route::middleware('permission:manage_employees')->post('/employees', [EmployeeController::class, 'store']);
+    Route::middleware('permission:view_payroll')->get('/payroll-periods', [PayrollController::class, 'index']);
+    Route::middleware('permission:manage_employees')->post('/payroll-periods', [PayrollController::class, 'store']);
+    Route::middleware('permission:view_payroll')->get('/payroll-periods/{payrollPeriod}', [PayrollController::class, 'show']);
+    Route::middleware('permission:process_payroll')->post('/payroll-periods/{payrollPeriod}/generate', [PayrollController::class, 'generate']);
+    Route::middleware('permission:process_payroll')->post('/payroll-periods/{payrollPeriod}/post', [PayrollController::class, 'post']);
 });

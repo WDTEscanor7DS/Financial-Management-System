@@ -674,3 +674,52 @@ async function createCashTransaction(data) {
   });
   return res.data;
 }
+
+
+/* --------------------------------- payroll --------------------------------- */
+
+async function getEmployees() {
+  const res = await _api('GET', '/api/employees');
+  return res.data;
+}
+
+async function createEmployee(data) {
+  const res = await _api('POST', '/api/employees', {
+    employee_no: data.employeeNo,
+    full_name: data.fullName,
+    department_id: data.departmentId || null,
+    position: data.position,
+    employment_type: data.employmentType,
+    monthly_rate: data.monthlyRate,
+    hire_date: data.hireDate,
+  });
+  return res.data;
+}
+
+async function getPayrollPeriods() {
+  const res = await _api('GET', '/api/payroll-periods');
+  return res.data;
+}
+
+async function createPayrollPeriod(data) {
+  const res = await _api('POST', '/api/payroll-periods', {
+    period_label: data.periodLabel,
+    start_date: data.startDate,
+    end_date: data.endDate,
+  });
+  return res.data;
+}
+
+async function getPayrollPeriodDetail(id) {
+  return await _api('GET', '/api/payroll-periods/' + id);
+}
+
+async function generatePayslips(id) {
+  const res = await _api('POST', '/api/payroll-periods/' + id + '/generate');
+  return res.data;
+}
+
+async function postPayrollToLedger(id) {
+  const res = await _api('POST', '/api/payroll-periods/' + id + '/post');
+  return res.data;
+}

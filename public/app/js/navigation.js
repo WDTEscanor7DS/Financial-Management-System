@@ -19,6 +19,7 @@ const NAV_SECTIONS = [
       { key: 'procurement', label: 'Procurement & Requests', href: 'procurement.html', icon: 'cart' },
       { key: 'assets', label: 'Assets & Depreciation', href: 'assets.html', icon: 'box' },
       { key: 'cash-bank', label: 'Cash and Bank', href: 'cash-bank.html', icon: 'wallet' },
+      { key: 'payroll', label: 'Payroll', href: 'payroll.html', icon: 'payroll' },
       { key: 'general-ledger', label: 'General Ledger', href: 'general-ledger.html', icon: 'file' },
       { key: 'reports', label: 'Financial Reports', href: 'reports.html', icon: 'file' }
     ]
@@ -45,6 +46,8 @@ const ICONS = {
   shield: '<path d="M12 2 4 5v6c0 5 3.4 8.7 8 11 4.6-2.3 8-6 8-11V5Z"/>',
   bell: '<path d="M6 8a6 6 0 0 1 12 0c0 5 2 6 2 7H4c0-1 2-2 2-7Z"/><path d="M10 20a2 2 0 0 0 4 0"/>',
   logout: '<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><path d="M21 12H9"/>',
+  wallet: '<path d="M3 7a2 2 0 0 1 2-2h13a1 1 0 0 1 1 1v2"/><path d="M3 7v11a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-8a2 2 0 0 0-2-2H5"/><circle cx="16" cy="14" r="1.2"/>',
+  payroll: '<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 8h10M7 12h10M7 16h6"/>',
   chevron: '<polyline points="9 18 15 12 9 6"/>'
 };
 

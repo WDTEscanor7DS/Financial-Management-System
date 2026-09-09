@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Payroll — Financial Management System</title>
+<link rel="stylesheet" href="../css/style.css">
+<link rel="stylesheet" href="../css/dashboard.css">
+<link rel="stylesheet" href="../css/modules.css">
+<link rel="stylesheet" href="../css/forms.css">
+</head>
+<body>
+<div class="app-shell">
+  <aside class="sidebar" id="appSidebar">
+    <div class="sidebar-brand">
+      <span class="brand-mark">FMS</span>
+      <div class="brand-text"><strong>Financial Management System</strong><span>Prototype</span></div>
+    </div>
+    <nav id="sidebarNav"></nav>
+    <div class="sidebar-toggle-row">
+      <button class="icon-btn" id="sidebarToggle" title="Collapse sidebar" aria-label="Collapse sidebar">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+      </button>
+    </div>
+  </aside>
+
+  <div class="main-col">
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="icon-btn mobile-nav-toggle" id="mobileNavToggle" aria-label="Open navigation">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        </button>
+        <div>
+          <div class="topbar-title">Payroll</div>
+          <div class="topbar-breadcrumb">Financial Management System</div>
+        </div>
+      </div>
+      <div class="topbar-right">
+        <span class="role-chip js-role-label">Role</span>
+        <div class="notif-wrap">
+          <button class="icon-btn" id="notifButton" aria-label="Notifications">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 5 2 6 2 7H4c0-1 2-2 2-7Z"/><path d="M10 20a2 2 0 0 0 4 0"/></svg>
+            <span class="notif-badge" id="notifBadge" hidden>0</span>
+          </button>
+          <div class="notif-panel" id="notifPanel">
+            <div class="notif-panel-head"><strong>Notifications</strong><button id="notifMarkAll">Mark all read</button></div>
+            <div id="notifList"></div>
+          </div>
+        </div>
+        <div class="user-menu-wrap">
+          <button class="user-trigger" id="userMenuButton">
+            <span class="avatar" id="topbarUserInitials">--</span>
+            <span class="user-trigger-text"><strong id="topbarUserName">--</strong><span class="js-role-label">Role</span></span>
+          </button>
+          <div class="user-menu" id="userMenu">
+            <button class="user-menu-item" id="logoutButton">
+              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><path d="M21 12H9"/></svg>
+              Sign out
+            </button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="page-content">
+      <div class="page-header">
+        <div>
+          <h1>Payroll</h1>
+          <p>Manage employees and process payroll runs.</p>
+        </div>
+        <div class="page-header-actions">
+          <button class="btn btn-outline" id="addEmployeeBtn">+ New Employee</button>
+          <button class="btn btn-primary" id="addPeriodBtn">+ New Payroll Run</button>
+        </div>
+      </div>
+
+      <div class="tabs" style="margin-bottom:16px;">
+        <button class="tab-btn active" data-tab="employees">Employees</button>
+        <button class="tab-btn" data-tab="periods">Payroll Runs</button>
+      </div>
+
+      <div id="employeesTab">
+        <div class="card table-card">
+          <div class="table-scroll">
+            <table class="data-table" id="employeesTable">
+              <thead><tr>
+                <th>Emp. No.</th><th>Name</th><th>Department</th><th>Position</th><th>Type</th><th class="amount">Monthly Rate</th><th>Status</th>
+              </tr></thead>
+              <tbody></tbody>
+            </table>
+          </div>
+          <div class="table-footer"><span id="employeesCount"></span></div>
+        </div>
+      </div>
+
+      <div id="periodsTab" hidden>
+        <div class="card table-card">
+          <div class="table-scroll">
+            <table class="data-table" id="periodsTable">
+              <thead><tr>
+                <th>Period</th><th>Start</th><th>End</th><th>Status</th><th># Payslips</th><th>GL Entry</th><th></th>
+              </tr></thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- New Employee Modal -->
+      <div class="modal" id="employeeModal">
+        <div class="modal-dialog">
+          <div class="modal-head">
+            <div><h2>New Employee</h2><p>Add a new employee to the payroll master list.</p></div>
+            <button class="modal-close" data-close-modal="employeeModal"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+          </div>
+          <form id="employeeForm">
+            <div class="modal-body">
+              <div class="form-errors" hidden></div>
+              <div class="form-grid">
+                <div class="form-field">
+                  <label>Employee No.<span class="req">*</span></label>
+                  <input type="text" id="empNo" required placeholder="e.g. EMP-0001">
+                </div>
+                <div class="form-field">
+                  <label>Full Name<span class="req">*</span></label>
+                  <input type="text" id="empName" required>
+                </div>
+                <div class="form-field">
+                  <label>Department</label>
+                  <select id="empDepartment"><option value="">— None —</option></select>
+                </div>
+                <div class="form-field">
+                  <label>Position<span class="req">*</span></label>
+                  <input type="text" id="empPosition" required>
+                </div>
+                <div class="form-field">
+                  <label>Employment Type<span class="req">*</span></label>
+                  <select id="empType">
+                    <option value="Full-time">Full-time</option>
+                    <option value="Part-time">Part-time</option>
+                  </select>
+                </div>
+                <div class="form-field">
+                  <label>Monthly Rate (₱)<span class="req">*</span></label>
+                  <input type="number" id="empRate" min="0" step="0.01" required>
+                </div>
+                <div class="form-field">
+                  <label>Hire Date<span class="req">*</span></label>
+                  <input type="date" id="empHireDate" required>
+                </div>
+              </div>
+            </div>
+            <div class="modal-foot">
+              <button type="button" class="btn btn-outline" data-close-modal="employeeModal">Cancel</button>
+              <button type="submit" class="btn btn-primary">Save Employee</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- New Payroll Period Modal -->
+      <div class="modal" id="periodModal">
+        <div class="modal-dialog">
+          <div class="modal-head">
+            <div><h2>New Payroll Run</h2><p>Define the period, then generate payslips for all active employees.</p></div>
+            <button class="modal-close" data-close-modal="periodModal"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+          </div>
+          <form id="periodForm">
+            <div class="modal-body">
+              <div class="form-errors" hidden></div>
+              <div class="form-grid">
+                <div class="form-field full">
+                  <label>Period Label<span class="req">*</span></label>
+                  <input type="text" id="periodLabel" required placeholder="e.g. September 2026">
+                </div>
+                <div class="form-field">
+                  <label>Start Date<span class="req">*</span></label>
+                  <input type="date" id="periodStart" required>
+                </div>
+                <div class="form-field">
+                  <label>End Date<span class="req">*</span></label>
+                  <input type="date" id="periodEnd" required>
+                </div>
+              </div>
+            </div>
+            <div class="modal-foot">
+              <button type="button" class="btn btn-outline" data-close-modal="periodModal">Cancel</button>
+              <button type="submit" class="btn btn-primary">Create Run</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- Payroll Period Detail Modal -->
+      <div class="modal" id="periodDetailModal">
+        <div class="modal-dialog wide">
+          <div class="modal-head">
+            <div><h2 id="pdTitle">Payroll Run Detail</h2><p id="pdSub"></p></div>
+            <button class="modal-close" id="pdCloseBtn"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+          </div>
+          <div class="modal-body">
+            <div class="table-scroll">
+              <table class="data-table" id="payslipsTable">
+                <thead><tr>
+                  <th>Employee</th><th class="amount">Basic Pay</th><th class="amount">SSS</th><th class="amount">PhilHealth</th>
+                  <th class="amount">Pag-IBIG</th><th class="amount">Tax</th><th class="amount">Net Pay</th>
+                </tr></thead>
+                <tbody></tbody>
+              </table>
+            </div>
+          </div>
+          <div class="modal-foot" id="pdFooter">
+            <button class="btn btn-outline" id="pdCloseBtn2">Close</button>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<script src="../js/data.js?v=20260901"></script>
+<script src="../js/auth.js?v=20260901"></script>
+<script src="../js/app.js"></script>
+<script src="../js/navigation.js"></script>
+<script src="../js/payroll.js"></script>
+</body>
+</html>

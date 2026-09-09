@@ -53,7 +53,11 @@ class CashBankController extends Controller
     public function index(Request $request)
     {
         $transactions = CashTransaction::with(['bankAccount', 'transferToAccount', 'contraAccount', 'creator'])
-            ->when($request->query('bank_account_id'), fn ($q, $v) => $q->where('bank_account_id', $v))
+            ->when($request->query('bank_account_id'), function ($q, $v) {
+                $q->where(function ($sub) use ($v) {
+                    $sub->where('bank_account_id', $v)->orWhere('transfer_to_account_id', $v);
+                });
+            })
             ->orderByDesc('transaction_date')
             ->get()
             ->map($this->transform(...));

@@ -49,6 +49,9 @@ class RolePermissionSeeder extends Seeder
 
             'view_audit_logs' => 'Security & Audit',
             'view_general_ledger' => 'General Ledger', 'create_journal_entry' => 'General Ledger',
+            'view_cash_bank' => 'Cash and Bank', 'create_cash_transaction' => 'Cash and Bank',
+
+            'view_payroll' => 'Payroll', 'manage_employees' => 'Payroll', 'process_payroll' => 'Payroll',
 
             'manage_users' => 'System Administration',
             'manage_roles' => 'System Administration',
@@ -77,6 +80,8 @@ class RolePermissionSeeder extends Seeder
             'view_assets', 'create_asset', 'edit_asset', 'delete_asset',
             'view_reports', 'generate_reports',
             'view_general_ledger', 'create_journal_entry',
+            'view_cash_bank', 'create_cash_transaction',
+            'view_payroll', 'manage_employees', 'process_payroll',
         ];
 
         $collegeAdminSlugs = ['view_dashboard', 'view_budget', 'view_procurement', 'view_reports', 'generate_reports'];
