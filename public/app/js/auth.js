@@ -25,7 +25,8 @@ const MODULE_PERMISSIONS = {
   assets: 'view_assets',
   reports: 'view_reports',
   audit: 'view_audit_logs',
-  'general-ledger': 'view_general_ledger'
+  'general-ledger': 'view_general_ledger',
+  'cash-bank': 'view_cash_bank'
 };
 
 let _currentUser = null; // { id, name, email, department, role, roleSlug, permissions: Set }

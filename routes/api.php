@@ -16,6 +16,7 @@ use App\Http\Controllers\Api\ReportController;
 use App\Http\Controllers\Api\RevenueController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\GeneralLedgerController;
+use App\Http\Controllers\Api\CashBankController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -74,6 +75,12 @@ Route::middleware(['auth:sanctum', 'account.active'])->group(function () {
     Route::middleware('permission:create_journal_entry')->post('/general-ledger/entries', [GeneralLedgerController::class, 'store']);
     Route::middleware('permission:create_journal_entry')->post('/general-ledger/entries/{journalEntry}/reverse', [GeneralLedgerController::class, 'reverse']);
     Route::middleware('permission:view_general_ledger')->get('/general-ledger/trial-balance', [GeneralLedgerController::class, 'trialBalance']);
+
+    // Cash and Bank
+    Route::middleware('permission:view_cash_bank')->get('/cash-bank/accounts', [CashBankController::class, 'accounts']);
+    Route::middleware('permission:create_cash_transaction')->post('/cash-bank/accounts', [CashBankController::class, 'storeAccount']);
+    Route::middleware('permission:view_cash_bank')->get('/cash-bank/transactions', [CashBankController::class, 'index']);
+    Route::middleware('permission:create_cash_transaction')->post('/cash-bank/transactions', [CashBankController::class, 'store']);
 
     // Accounts Payable
     Route::middleware('permission:view_accounts_payable')->get('/accounts-payable', [AccountsPayableController::class, 'index']);

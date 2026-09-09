@@ -18,6 +18,7 @@ const NAV_SECTIONS = [
       { key: 'funds', label: 'Fund Management', href: 'funds.html', icon: 'vault' },
       { key: 'procurement', label: 'Procurement & Requests', href: 'procurement.html', icon: 'cart' },
       { key: 'assets', label: 'Assets & Depreciation', href: 'assets.html', icon: 'box' },
+      { key: 'cash-bank', label: 'Cash and Bank', href: 'cash-bank.html', icon: 'wallet' },
       { key: 'general-ledger', label: 'General Ledger', href: 'general-ledger.html', icon: 'file' },
       { key: 'reports', label: 'Financial Reports', href: 'reports.html', icon: 'file' }
     ]

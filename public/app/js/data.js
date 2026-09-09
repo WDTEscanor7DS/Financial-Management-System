@@ -634,3 +634,43 @@ async function reverseJournalEntry(id) {
 async function getTrialBalance() {
   return await _api('GET', '/api/general-ledger/trial-balance');
 }
+
+
+/* ------------------------------ cash and bank ------------------------------ */
+
+async function createCashBankAccount(data) {
+  const res = await _api('POST', '/api/cash-bank/accounts', {
+    account_name: data.accountName,
+    account_type: data.accountType,
+    bank_name: data.bankName || null,
+    account_number: data.accountNumber || null,
+    chart_of_account_id: data.chartOfAccountId,
+    opening_balance: data.openingBalance,
+  });
+  return res.data;
+}
+
+async function getCashBankAccounts() {
+  const res = await _api('GET', '/api/cash-bank/accounts');
+  return res.data;
+}
+
+async function getCashTransactions(bankAccountId) {
+  const query = bankAccountId ? '?bank_account_id=' + bankAccountId : '';
+  const res = await _api('GET', '/api/cash-bank/transactions' + query);
+  return res.data;
+}
+
+async function createCashTransaction(data) {
+  const res = await _api('POST', '/api/cash-bank/transactions', {
+    bank_account_id: data.bankAccountId,
+    transaction_date: data.transactionDate,
+    type: data.type,
+    amount: data.amount,
+    reference_no: data.referenceNo,
+    description: data.description,
+    contra_account_id: data.contraAccountId || null,
+    transfer_to_account_id: data.transferToAccountId || null,
+  });
+  return res.data;
+}
