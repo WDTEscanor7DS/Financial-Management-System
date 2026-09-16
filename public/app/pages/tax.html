@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tax — Financial Management System</title>
+<link rel="stylesheet" href="../css/style.css">
+<link rel="stylesheet" href="../css/dashboard.css">
+<link rel="stylesheet" href="../css/modules.css">
+<link rel="stylesheet" href="../css/forms.css">
+</head>
+<body>
+<div class="app-shell">
+  <aside class="sidebar" id="appSidebar">
+    <div class="sidebar-brand">
+      <span class="brand-mark">FMS</span>
+      <div class="brand-text"><strong>Financial Management System</strong><span>Prototype</span></div>
+    </div>
+    <nav id="sidebarNav"></nav>
+    <div class="sidebar-toggle-row">
+      <button class="icon-btn" id="sidebarToggle" title="Collapse sidebar" aria-label="Collapse sidebar">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+      </button>
+    </div>
+  </aside>
+
+  <div class="main-col">
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="icon-btn mobile-nav-toggle" id="mobileNavToggle" aria-label="Open navigation">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        </button>
+        <div>
+          <div class="topbar-title">Tax</div>
+          <div class="topbar-breadcrumb">Financial Management System</div>
+        </div>
+      </div>
+      <div class="topbar-right">
+        <span class="role-chip js-role-label">Role</span>
+        <div class="notif-wrap">
+          <button class="icon-btn" id="notifButton" aria-label="Notifications">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 5 2 6 2 7H4c0-1 2-2 2-7Z"/><path d="M10 20a2 2 0 0 0 4 0"/></svg>
+            <span class="notif-badge" id="notifBadge" hidden>0</span>
+          </button>
+          <div class="notif-panel" id="notifPanel">
+            <div class="notif-panel-head"><strong>Notifications</strong><button id="notifMarkAll">Mark all read</button></div>
+            <div id="notifList"></div>
+          </div>
+        </div>
+        <div class="user-menu-wrap">
+          <button class="user-trigger" id="userMenuButton">
+            <span class="avatar" id="topbarUserInitials">--</span>
+            <span class="user-trigger-text"><strong id="topbarUserName">--</strong><span class="js-role-label">Role</span></span>
+          </button>
+          <div class="user-menu" id="userMenu">
+            <button class="user-menu-item" id="logoutButton">
+              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><path d="M21 12H9"/></svg>
+              Sign out
+            </button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="page-content">
+      <div class="page-header">
+        <div>
+          <h1>Tax</h1>
+          <p>Record tax remittances to the BIR. Automatically posts to Cash and Bank and the General Ledger.</p>
+        </div>
+        <div class="page-header-actions">
+          <button class="btn btn-primary" id="addRemittanceBtn">+ New Remittance</button>
+        </div>
+      </div>
+
+      <div class="card table-card" style="margin-bottom:20px;">
+        <div class="table-scroll">
+          <table class="data-table" id="taxTypesTable">
+            <thead><tr>
+              <th>Code</th><th>Tax Type</th><th>BIR Form</th><th>GL Account</th>
+            </tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="card table-card">
+        <div class="table-scroll">
+          <table class="data-table" id="remittancesTable">
+            <thead><tr>
+              <th>ID</th><th>Date</th><th>Tax Type</th><th>Period Covered</th><th>BIR Reference</th>
+              <th>Paid From</th><th class="amount">Amount</th><th>GL Entry</th>
+            </tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        <div class="table-footer"><span id="remittancesCount"></span></div>
+      </div>
+
+      <!-- New Remittance Modal -->
+      <div class="modal" id="remittanceModal">
+        <div class="modal-dialog">
+          <div class="modal-head">
+            <div><h2>New Tax Remittance</h2><p>Records a withdrawal from a bank account and posts to the General Ledger.</p></div>
+            <button class="modal-close" data-close-modal="remittanceModal"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+          </div>
+          <form id="remittanceForm">
+            <div class="modal-body">
+              <div class="form-errors" hidden></div>
+              <div class="form-grid">
+                <div class="form-field full">
+                  <label>Tax Type<span class="req">*</span></label>
+                  <select id="rtTaxType" required></select>
+                </div>
+                <div class="form-field">
+                  <label>Period Covered<span class="req">*</span></label>
+                  <input type="text" id="rtPeriod" required placeholder="e.g. September 2026">
+                </div>
+                <div class="form-field">
+                  <label>Remittance Date<span class="req">*</span></label>
+                  <input type="date" id="rtDate" required>
+                </div>
+                <div class="form-field">
+                  <label>Amount (₱)<span class="req">*</span></label>
+                  <input type="number" id="rtAmount" min="0.01" step="0.01" required>
+                </div>
+                <div class="form-field">
+                  <label>BIR Reference No.</label>
+                  <input type="text" id="rtReference">
+                </div>
+                <div class="form-field full">
+                  <label>Pay From Account<span class="req">*</span></label>
+                  <select id="rtBankAccount" required></select>
+                </div>
+              </div>
+            </div>
+            <div class="modal-foot">
+              <button type="button" class="btn btn-outline" data-close-modal="remittanceModal">Cancel</button>
+              <button type="submit" class="btn btn-primary">Save Remittance</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<script src="../js/data.js?v=20260901"></script>
+<script src="../js/auth.js?v=20260901"></script>
+<script src="../js/app.js"></script>
+<script src="../js/navigation.js"></script>
+<script src="../js/tax.js"></script>
+</body>
+</html>

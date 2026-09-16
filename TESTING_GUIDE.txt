@@ -1,0 +1,144 @@
+====================================================================
+ FMS - TESTING GUIDE (NEW MODULES)
+====================================================================
+
+Quick reference for testing the 8 modules added on top of the
+original prototype: General Ledger, Cash and Bank, Payroll, Tax,
+Approval Engine, Inventory, Purchase Order, Document Management.
+
+
+LOGIN ACCOUNTS NEEDED
+--------------------------------------------------------------------
+Accountant            - Almost everything: creating records, GL
+                         entries, Cash & Bank, Payroll, Tax,
+                         Inventory, Purchase Orders, Documents,
+                         and Step 2 of Purchase Order approval.
+
+College Administrator - Step 1 of Purchase Order approval only.
+
+Some tests need BOTH accounts logged in at the same time. Easiest
+way: open one in a normal window and the other in an Incognito
+window.
+
+
+--------------------------------------------------------------------
+1. GENERAL LEDGER
+--------------------------------------------------------------------
+  1. Go to General Ledger > New Journal Entry.
+  2. Add 2 lines: pick an account, put an amount in Debit; pick
+     another account, same amount in Credit.
+  3. Confirm it shows "Balanced" before saving, then Save.
+  4. Entry appears in the table. Click View, then try Trial
+     Balance - totals should say "Balanced."
+  5. Try "Reverse Entry" on the entry you just made - a second,
+     offsetting entry should appear.
+
+
+--------------------------------------------------------------------
+2. CASH AND BANK
+--------------------------------------------------------------------
+  1. "+ New Account" - create a Bank/Cash account, link it to a GL
+     account (e.g. "1000 - Cash"), give it an opening balance.
+  2. "+ New Transaction" > Deposit - pick the account, a Contra
+     Account (e.g. Revenue), an amount. Save.
+  3. Balance should go UP, and a matching entry should appear in
+     General Ledger.
+  4. Try Withdrawal the same way - balance should go DOWN.
+  5. Try withdrawing more than the balance - should be REJECTED
+     with an error.
+  6. Try Transfer between two accounts - one balance goes down,
+     the other goes up.
+
+
+--------------------------------------------------------------------
+3. PAYROLL
+--------------------------------------------------------------------
+  1. Employees tab > "+ New Employee" - add at least one.
+  2. Payroll Runs tab > "+ New Payroll Run" - give it a label and
+     date range.
+  3. Open it > Generate Payslips - should compute SSS, PhilHealth,
+     Pag-IBIG, and Tax per employee.
+  4. Post to General Ledger - status becomes "Posted."
+  5. Check General Ledger - one consolidated entry should appear,
+     balanced.
+
+
+--------------------------------------------------------------------
+4. TAX
+--------------------------------------------------------------------
+  1. Go to Tax - confirm the 3 tax types (Withholding, VAT,
+     Percentage Tax) are listed.
+  2. "+ New Remittance" - pick a tax type, amount, and which bank
+     account to pay from.
+  3. Balance of that bank account goes down; entry appears in both
+     Cash and Bank AND General Ledger.
+
+
+--------------------------------------------------------------------
+5. APPROVAL ENGINE   (needs both accounts)
+--------------------------------------------------------------------
+  1. As Accountant: Approval Engine > "+ New Test Request."
+  2. As College Administrator: open the request > Approve (Step 1).
+  3. Step 1 turns green; Step 2 becomes active.
+  4. As Accountant: open the request > Approve (Step 2).
+  5. Whole request status becomes "Approved."
+  6. (Optional) Try Reject at Step 1 instead - whole request should
+     finalize as "Rejected" immediately.
+
+
+--------------------------------------------------------------------
+6. INVENTORY
+--------------------------------------------------------------------
+  1. "+ New Item" - give it a code, name, reorder level.
+  2. "+ New Movement" > Stock In, some quantity. Qty on hand goes
+     up.
+  3. Stock Out a large quantity, close to what's on hand - item
+     should show a red "Low Stock" warning once it drops to/below
+     reorder level.
+  4. Try a Stock Out larger than what's available - should be
+     REJECTED.
+
+
+--------------------------------------------------------------------
+7. PURCHASE ORDER   (needs both accounts + 1 Inventory item)
+--------------------------------------------------------------------
+  1. As Accountant: "+ New Purchase Order" - supplier name, add a
+     line item (pick an inventory item, quantity). Save as Draft.
+  2. Open it > Submit for Approval.
+  3. As College Administrator: go to Approval Engine, find the
+     request, Approve.
+  4. As Accountant: go to Approval Engine, Approve the same request
+     (Step 2).
+  5. Back in Purchase Order, open the PO - status should now be
+     "Approved," with a Receive Items button.
+  6. Click Receive Items.
+  7. Check Inventory - quantity should have increased by the
+     ordered amount.
+  8. Check General Ledger - a new balanced entry should appear
+     (Debit Inventory, Credit Accounts Payable).
+
+
+--------------------------------------------------------------------
+8. DOCUMENT MANAGEMENT
+--------------------------------------------------------------------
+  1. "+ Upload Document" - pick any PDF/image file, choose a
+     related module. Upload.
+  2. File appears in the table with correct name and size. Click
+     the filename - it should open in a new tab.
+  3. Try the "Filter by Module" dropdown - list should narrow down
+     correctly.
+  4. Delete the document - it should disappear from the list.
+
+
+====================================================================
+ AUTOMATED TESTS (optional, for developers)
+====================================================================
+
+Every module above also has PHPUnit tests. To run all of them at
+once, open a terminal in the project folder and run:
+
+    php artisan test
+
+All tests should show PASS. If anything shows FAIL, note which
+test and check the corresponding module before assuming the manual
+testing above will work correctly.

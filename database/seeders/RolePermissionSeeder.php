@@ -53,6 +53,18 @@ class RolePermissionSeeder extends Seeder
 
             'view_payroll' => 'Payroll', 'manage_employees' => 'Payroll', 'process_payroll' => 'Payroll',
 
+            'view_tax' => 'Tax', 'create_tax_remittance' => 'Tax',
+
+            'view_approvals' => 'Approval Engine', 'create_approval_request' => 'Approval Engine',
+            'approve_po_college_admin' => 'Approval Engine', 'approve_po_finance' => 'Approval Engine',
+
+            'view_inventory' => 'Inventory', 'manage_inventory' => 'Inventory',
+
+            'view_purchase_order' => 'Purchase Order', 'create_purchase_order' => 'Purchase Order',
+            'receive_purchase_order' => 'Purchase Order',
+
+            'view_documents' => 'Document Management', 'upload_document' => 'Document Management',
+            'delete_document' => 'Document Management',
             'manage_users' => 'System Administration',
             'manage_roles' => 'System Administration',
             'manage_permissions' => 'System Administration',
@@ -82,9 +94,16 @@ class RolePermissionSeeder extends Seeder
             'view_general_ledger', 'create_journal_entry',
             'view_cash_bank', 'create_cash_transaction',
             'view_payroll', 'manage_employees', 'process_payroll',
+            'view_tax', 'create_tax_remittance',
+            'view_approvals', 'create_approval_request', 'approve_po_finance',
+            'view_inventory', 'manage_inventory',
+            'view_purchase_order', 'create_purchase_order', 'receive_purchase_order',
+            'view_documents', 'upload_document', 'delete_document',
         ];
-
-        $collegeAdminSlugs = ['view_dashboard', 'view_budget', 'view_procurement', 'view_reports', 'generate_reports'];
+        $collegeAdminSlugs = [
+            'view_dashboard', 'view_budget', 'view_procurement', 'view_reports', 'generate_reports',
+            'view_approvals', 'approve_po_college_admin', 'view_purchase_order',
+        ];
 
         $employeeSlugs = ['view_dashboard', 'view_procurement', 'create_procurement_request'];
 

@@ -13,6 +13,8 @@ class DatabaseSeeder extends Seeder
             DepartmentSeeder::class,     // users reference departments
             UserSeeder::class,           // depends on both of the above
             ChartOfAccountsSeeder::class, // GL starter accounts
+            TaxTypesSeeder::class, // tax types
+            ApprovalWorkflowSeeder::class, // approval workflow
         ]);
     }
 }

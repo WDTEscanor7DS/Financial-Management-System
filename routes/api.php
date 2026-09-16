@@ -20,6 +20,11 @@ use App\Http\Controllers\Api\CashBankController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\EmployeeController;
 use App\Http\Controllers\Api\PayrollController;
+use App\Http\Controllers\Api\TaxController;
+use App\Http\Controllers\Api\ApprovalController;
+use App\Http\Controllers\Api\InventoryController;
+use App\Http\Controllers\Api\PurchaseOrderController;
+use App\Http\Controllers\Api\DocumentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -147,4 +152,31 @@ Route::middleware(['auth:sanctum', 'account.active'])->group(function () {
     Route::middleware('permission:view_payroll')->get('/payroll-periods/{payrollPeriod}', [PayrollController::class, 'show']);
     Route::middleware('permission:process_payroll')->post('/payroll-periods/{payrollPeriod}/generate', [PayrollController::class, 'generate']);
     Route::middleware('permission:process_payroll')->post('/payroll-periods/{payrollPeriod}/post', [PayrollController::class, 'post']);
+
+    // Tax
+    Route::middleware('permission:view_tax')->get('/tax/types', [TaxController::class, 'taxTypes']);
+    Route::middleware('permission:view_tax')->get('/tax/remittances', [TaxController::class, 'index']);
+    Route::middleware('permission:create_tax_remittance')->post('/tax/remittances', [TaxController::class, 'store']);
+
+    // Approval Engine
+    Route::middleware('permission:view_approvals')->get('/approvals', [ApprovalController::class, 'index']);
+    Route::middleware('permission:create_approval_request')->post('/approvals', [ApprovalController::class, 'store']);
+    Route::middleware('permission:view_approvals')->post('/approvals/{approvalRequest}/act', [ApprovalController::class, 'act']);
+
+    // Inventory
+    Route::middleware('permission:view_inventory')->get('/inventory/items', [InventoryController::class, 'index']);
+    Route::middleware('permission:manage_inventory')->post('/inventory/items', [InventoryController::class, 'storeItem']);
+    Route::middleware('permission:view_inventory')->get('/inventory/movements', [InventoryController::class, 'movements']);
+    Route::middleware('permission:manage_inventory')->post('/inventory/movements', [InventoryController::class, 'storeMovement']);
+
+    // Purchase Order
+    Route::middleware('permission:view_purchase_order')->get('/purchase-orders', [PurchaseOrderController::class, 'index']);
+    Route::middleware('permission:create_purchase_order')->post('/purchase-orders', [PurchaseOrderController::class, 'store']);
+    Route::middleware('permission:create_purchase_order')->post('/purchase-orders/{purchaseOrder}/submit', [PurchaseOrderController::class, 'submit']);
+    Route::middleware('permission:receive_purchase_order')->post('/purchase-orders/{purchaseOrder}/receive', [PurchaseOrderController::class, 'receive']);
+
+    // Document Management
+    Route::middleware('permission:view_documents')->get('/documents', [DocumentController::class, 'index']);
+    Route::middleware('permission:upload_document')->post('/documents', [DocumentController::class, 'store']);
+    Route::middleware('permission:delete_document')->delete('/documents/{document}', [DocumentController::class, 'destroy']);
 });

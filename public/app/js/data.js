@@ -723,3 +723,152 @@ async function postPayrollToLedger(id) {
   const res = await _api('POST', '/api/payroll-periods/' + id + '/post');
   return res.data;
 }
+
+
+/* ----------------------------------- tax ----------------------------------- */
+
+async function getTaxTypes() {
+  const res = await _api('GET', '/api/tax/types');
+  return res.data;
+}
+
+async function getTaxRemittances() {
+  const res = await _api('GET', '/api/tax/remittances');
+  return res.data;
+}
+
+async function createTaxRemittance(data) {
+  const res = await _api('POST', '/api/tax/remittances', {
+    tax_type_id: data.taxTypeId,
+    period_covered: data.periodCovered,
+    remittance_date: data.remittanceDate,
+    amount: data.amount,
+    bir_reference_no: data.birReferenceNo,
+    bank_account_id: data.bankAccountId,
+  });
+  return res.data;
+}
+
+
+/* ------------------------------ approval engine ------------------------------ */
+
+async function getApprovalRequests() {
+  const res = await _api('GET', '/api/approvals');
+  return res.data;
+}
+
+async function createApprovalRequest(data) {
+  const res = await _api('POST', '/api/approvals', {
+    workflow_code: data.workflowCode,
+    description: data.description,
+  });
+  return res.data;
+}
+
+async function actOnApprovalRequest(id, decision, remarks) {
+  const raw = id.split('-').pop().replace(/^0+/, '') || '0';
+  const res = await _api('POST', '/api/approvals/' + raw + '/act', { decision, remarks });
+  return res.data;
+}
+
+
+/* --------------------------------- inventory --------------------------------- */
+
+async function getInventoryItems() {
+  const res = await _api('GET', '/api/inventory/items');
+  return res.data;
+}
+
+async function createInventoryItem(data) {
+  const res = await _api('POST', '/api/inventory/items', {
+    item_code: data.itemCode,
+    item_name: data.itemName,
+    category: data.category,
+    unit_of_measure: data.unitOfMeasure,
+    unit_cost: data.unitCost,
+    reorder_level: data.reorderLevel,
+  });
+  return res.data;
+}
+
+async function getStockMovements() {
+  const res = await _api('GET', '/api/inventory/movements');
+  return res.data;
+}
+
+async function createStockMovement(data) {
+  const res = await _api('POST', '/api/inventory/movements', {
+    inventory_item_id: data.inventoryItemId,
+    type: data.type,
+    quantity: data.quantity,
+    moved_at: data.movedAt,
+    reference_no: data.referenceNo,
+    description: data.description,
+  });
+  return res.data;
+}
+
+
+/* ------------------------------ purchase order ------------------------------ */
+
+async function getPurchaseOrders() {
+  const res = await _api('GET', '/api/purchase-orders');
+  return res.data;
+}
+
+async function createPurchaseOrder(data) {
+  const res = await _api('POST', '/api/purchase-orders', {
+    supplier_name: data.supplierName,
+    order_date: data.orderDate,
+    items: data.items,
+  });
+  return res.data;
+}
+
+async function submitPurchaseOrder(id) {
+  const res = await _api('POST', '/api/purchase-orders/' + id + '/submit');
+  return res.data;
+}
+
+async function receivePurchaseOrder(id) {
+  const res = await _api('POST', '/api/purchase-orders/' + id + '/receive');
+  return res.data;
+}
+
+
+/* ------------------------------ document management ------------------------------ */
+
+async function getDocuments(sourceModule) {
+  const query = sourceModule ? '?source_module=' + encodeURIComponent(sourceModule) : '';
+  const res = await _api('GET', '/api/documents' + query);
+  return res.data;
+}
+
+async function uploadDocument(file, sourceModule, sourceId) {
+  await _ensureCsrfCookie();
+  const token = _readCookie('XSRF-TOKEN');
+
+  const formData = new FormData();
+  formData.append('file', file);
+  formData.append('source_module', sourceModule);
+  if (sourceId) formData.append('source_id', sourceId);
+
+  const response = await fetch(appUrl('api/documents'), {
+    method: 'POST',
+    credentials: 'include',
+    headers: { Accept: 'application/json', 'X-XSRF-TOKEN': token || '' },
+    body: formData
+  });
+
+  const json = await response.json();
+  if (!response.ok) {
+    const firstFieldError = json.errors ? Object.values(json.errors)[0] : null;
+    throw new ApiError((firstFieldError && firstFieldError[0]) || json.message || 'Upload failed.', response.status);
+  }
+  return json.data;
+}
+
+async function deleteDocument(id) {
+  await _api('DELETE', '/api/documents/' + id);
+  return true;
+}

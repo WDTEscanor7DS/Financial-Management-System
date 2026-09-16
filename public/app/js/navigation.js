@@ -20,6 +20,11 @@ const NAV_SECTIONS = [
       { key: 'assets', label: 'Assets & Depreciation', href: 'assets.html', icon: 'box' },
       { key: 'cash-bank', label: 'Cash and Bank', href: 'cash-bank.html', icon: 'wallet' },
       { key: 'payroll', label: 'Payroll', href: 'payroll.html', icon: 'payroll' },
+      { key: 'tax', label: 'Tax', href: 'tax.html', icon: 'tax' },
+      { key: 'approvals', label: 'Approval Engine', href: 'approvals.html', icon: 'approvals' },
+      { key: 'inventory', label: 'Inventory', href: 'inventory.html', icon: 'inventory' },
+      { key: 'purchase-order', label: 'Purchase Order', href: 'purchase-order.html', icon: 'purchase-order' },
+      { key: 'documents', label: 'Document Management', href: 'documents.html', icon: 'documents' },
       { key: 'general-ledger', label: 'General Ledger', href: 'general-ledger.html', icon: 'file' },
       { key: 'reports', label: 'Financial Reports', href: 'reports.html', icon: 'file' }
     ]
@@ -48,6 +53,11 @@ const ICONS = {
   logout: '<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><path d="M21 12H9"/>',
   wallet: '<path d="M3 7a2 2 0 0 1 2-2h13a1 1 0 0 1 1 1v2"/><path d="M3 7v11a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-8a2 2 0 0 0-2-2H5"/><circle cx="16" cy="14" r="1.2"/>',
   payroll: '<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 8h10M7 12h10M7 16h6"/>',
+  tax: '<path d="M4 4h16v16H4Z"/><path d="M9 9h.01M15 15h.01M15 9 9 15"/>',
+  approvals: '<path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>',
+  inventory: '<path d="M21 8 12 3 3 8v8l9 5 9-5Z"/><path d="M3 8l9 5 9-5"/><path d="M12 13v8"/>',
+  'purchase-order': '<path d="M6 2h9l5 5v15H6Z"/><path d="M15 2v5h5"/><path d="M9 12h6M9 16h6"/><path d="M9 8h2"/>',
+  documents: '<path d="M4 4h16v16H4Z"/><path d="M8 9h8M8 13h8M8 17h4"/>',
   chevron: '<polyline points="9 18 15 12 9 6"/>'
 };
 

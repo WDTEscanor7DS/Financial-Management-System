@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Inventory — Financial Management System</title>
+<link rel="stylesheet" href="../css/style.css">
+<link rel="stylesheet" href="../css/dashboard.css">
+<link rel="stylesheet" href="../css/modules.css">
+<link rel="stylesheet" href="../css/forms.css">
+</head>
+<body>
+<div class="app-shell">
+  <aside class="sidebar" id="appSidebar">
+    <div class="sidebar-brand">
+      <span class="brand-mark">FMS</span>
+      <div class="brand-text"><strong>Financial Management System</strong><span>Prototype</span></div>
+    </div>
+    <nav id="sidebarNav"></nav>
+    <div class="sidebar-toggle-row">
+      <button class="icon-btn" id="sidebarToggle" title="Collapse sidebar" aria-label="Collapse sidebar">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+      </button>
+    </div>
+  </aside>
+
+  <div class="main-col">
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="icon-btn mobile-nav-toggle" id="mobileNavToggle" aria-label="Open navigation">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        </button>
+        <div>
+          <div class="topbar-title">Inventory</div>
+          <div class="topbar-breadcrumb">Financial Management System</div>
+        </div>
+      </div>
+      <div class="topbar-right">
+        <span class="role-chip js-role-label">Role</span>
+        <div class="notif-wrap">
+          <button class="icon-btn" id="notifButton" aria-label="Notifications">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 5 2 6 2 7H4c0-1 2-2 2-7Z"/><path d="M10 20a2 2 0 0 0 4 0"/></svg>
+            <span class="notif-badge" id="notifBadge" hidden>0</span>
+          </button>
+          <div class="notif-panel" id="notifPanel">
+            <div class="notif-panel-head"><strong>Notifications</strong><button id="notifMarkAll">Mark all read</button></div>
+            <div id="notifList"></div>
+          </div>
+        </div>
+        <div class="user-menu-wrap">
+          <button class="user-trigger" id="userMenuButton">
+            <span class="avatar" id="topbarUserInitials">--</span>
+            <span class="user-trigger-text"><strong id="topbarUserName">--</strong><span class="js-role-label">Role</span></span>
+          </button>
+          <div class="user-menu" id="userMenu">
+            <button class="user-menu-item" id="logoutButton">
+              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><path d="M21 12H9"/></svg>
+              Sign out
+            </button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="page-content">
+      <div class="page-header">
+        <div>
+          <h1>Inventory</h1>
+          <p>Track stock items and record stock in, stock out, and adjustments.</p>
+        </div>
+        <div class="page-header-actions">
+          <button class="btn btn-outline" id="addItemBtn">+ New Item</button>
+          <button class="btn btn-primary" id="addMovementBtn">+ New Movement</button>
+        </div>
+      </div>
+
+      <div class="kpi-strip" id="invKpis"></div>
+
+      <div class="tabs" style="margin-bottom:16px;">
+        <button class="tab-btn active" data-tab="items">Items</button>
+        <button class="tab-btn" data-tab="movements">Movement History</button>
+      </div>
+
+      <div id="itemsTab">
+        <div class="card table-card">
+          <div class="table-scroll">
+            <table class="data-table" id="itemsTable">
+              <thead><tr>
+                <th>Code</th><th>Item Name</th><th>Category</th><th>UoM</th><th class="amount">Unit Cost</th><th class="amount">Qty on Hand</th><th>Status</th>
+              </tr></thead>
+              <tbody></tbody>
+            </table>
+          </div>
+          <div class="table-footer"><span id="itemsCount"></span></div>
+        </div>
+      </div>
+
+      <div id="movementsTab" hidden>
+        <div class="card table-card">
+          <div class="table-scroll">
+            <table class="data-table" id="movementsTable">
+              <thead><tr>
+                <th>ID</th><th>Date</th><th>Item</th><th>Type</th><th class="amount">Quantity</th><th>Description</th><th>Recorded By</th>
+              </tr></thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- New Item Modal -->
+      <div class="modal" id="itemModal">
+        <div class="modal-dialog">
+          <div class="modal-head">
+            <div><h2>New Inventory Item</h2><p>Add a new item to the stock list.</p></div>
+            <button class="modal-close" data-close-modal="itemModal"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+          </div>
+          <form id="itemForm">
+            <div class="modal-body">
+              <div class="form-errors" hidden></div>
+              <div class="form-grid">
+                <div class="form-field">
+                  <label>Item Code<span class="req">*</span></label>
+                  <input type="text" id="itemCode" required placeholder="e.g. INV-0001">
+                </div>
+                <div class="form-field">
+                  <label>Item Name<span class="req">*</span></label>
+                  <input type="text" id="itemName" required>
+                </div>
+                <div class="form-field">
+                  <label>Category</label>
+                  <input type="text" id="itemCategory" placeholder="e.g. Office Supplies">
+                </div>
+                <div class="form-field">
+                  <label>Unit of Measure<span class="req">*</span></label>
+                  <input type="text" id="itemUom" required placeholder="e.g. Ream, Box, Piece">
+                </div>
+                <div class="form-field">
+                  <label>Unit Cost (₱)<span class="req">*</span></label>
+                  <input type="number" id="itemUnitCost" min="0" step="0.01" required>
+                </div>
+                <div class="form-field">
+                  <label>Reorder Level<span class="req">*</span></label>
+                  <input type="number" id="itemReorderLevel" min="0" required>
+                </div>
+              </div>
+            </div>
+            <div class="modal-foot">
+              <button type="button" class="btn btn-outline" data-close-modal="itemModal">Cancel</button>
+              <button type="submit" class="btn btn-primary">Save Item</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- New Movement Modal -->
+      <div class="modal" id="movementModal">
+        <div class="modal-dialog">
+          <div class="modal-head">
+            <div><h2>New Stock Movement</h2><p>Record a stock in, stock out, or adjustment.</p></div>
+            <button class="modal-close" data-close-modal="movementModal"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+          </div>
+          <form id="movementForm">
+            <div class="modal-body">
+              <div class="form-errors" hidden></div>
+              <div class="form-grid">
+                <div class="form-field full">
+                  <label>Item<span class="req">*</span></label>
+                  <select id="mvItem" required></select>
+                </div>
+                <div class="form-field">
+                  <label>Type<span class="req">*</span></label>
+                  <select id="mvType">
+                    <option value="Stock In">Stock In</option>
+                    <option value="Stock Out">Stock Out</option>
+                    <option value="Adjustment">Adjustment</option>
+                  </select>
+                </div>
+                <div class="form-field">
+                  <label>Date<span class="req">*</span></label>
+                  <input type="date" id="mvDate" required>
+                </div>
+                <div class="form-field">
+                  <label id="mvQtyLabel">Quantity<span class="req">*</span></label>
+                  <input type="number" id="mvQuantity" required>
+                </div>
+                <div class="form-field">
+                  <label>Reference No.</label>
+                  <input type="text" id="mvReference">
+                </div>
+                <div class="form-field full">
+                  <label>Description<span class="req">*</span></label>
+                  <input type="text" id="mvDescription" required>
+                </div>
+              </div>
+            </div>
+            <div class="modal-foot">
+              <button type="button" class="btn btn-outline" data-close-modal="movementModal">Cancel</button>
+              <button type="submit" class="btn btn-primary">Save Movement</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<script src="../js/data.js?v=20260901"></script>
+<script src="../js/auth.js?v=20260901"></script>
+<script src="../js/app.js"></script>
+<script src="../js/navigation.js"></script>
+<script src="../js/inventory.js"></script>
+</body>
+</html>
