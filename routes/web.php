@@ -22,8 +22,12 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
+    $scriptDir = rtrim(str_replace('\\', '/', dirname((string) request()->server('SCRIPT_NAME', '/'))), '/');
+    $basePath = ($scriptDir === '' || $scriptDir === '.') ? '' : $scriptDir;
+    $dashboardUrl = request()->getSchemeAndHttpHost() . $basePath . '/app/pages/dashboard.html?v=20260827';
+
     return Auth::check()
-        ? redirect('app/pages/dashboard.html?v=20260827')
+        ? redirect()->to($dashboardUrl)
         : redirect()->route('login');
 });
 
@@ -47,6 +51,9 @@ Route::middleware(['auth', 'account.active'])->group(function () {
     Route::post('/password', [PasswordController::class, 'update'])->name('password.change');
 
     Route::get('/dashboard', function () {
-        return redirect('app/pages/dashboard.html?v=20260827');
+        $scriptDir = rtrim(str_replace('\\', '/', dirname((string) request()->server('SCRIPT_NAME', '/'))), '/');
+        $basePath = ($scriptDir === '' || $scriptDir === '.') ? '' : $scriptDir;
+        $dashboardUrl = request()->getSchemeAndHttpHost() . $basePath . '/app/pages/dashboard.html?v=20260827';
+        return redirect()->to($dashboardUrl);
     })->name('dashboard');
 });

@@ -1,0 +1,383 @@
+FINANCIAL MANAGEMENT SYSTEM
+SYSTEM GUIDE
+
+Last updated: 2026-10-02
+Source of truth: current frontend module scripts in public/app/js and role permissions in database/seeders/RolePermissionSeeder.php.
+
+======================================================================
+1) ACCOUNT ACCESS OVERVIEW
+======================================================================
+
+Demo accounts (from current seed setup):
+- admin@example.test -> Administrator
+- accountant@example.test -> Accountant
+- collegeadmin@example.test -> College Administrator
+- employee@example.test -> Employee
+
+What each role can access:
+
+1. Administrator
+- Access: All modules and all actions.
+- Notes: Has full permission set, including system administration permissions (manage users/roles/permissions).
+
+2. Accountant
+- Access: Dashboard, Budget, Revenue, Expenses, Accounts Payable, Accounts Receivable, Funds, Procurement, Assets, Reports.
+- Access denied: Security & Audit Trail module.
+
+3. College Administrator
+- Access: Dashboard, Budget (view), Procurement (view), Reports.
+- Access denied: Revenue, Expenses, Payables, Receivables, Funds, Assets, Audit.
+- Notes: Limited permissions; mostly view/reporting and procurement visibility.
+
+4. Employee
+- Access: Dashboard, Procurement & Requests.
+- Access denied: Budget, Revenue, Expenses, Payables, Receivables, Funds, Assets, Reports, Audit.
+- Notes: Can submit procurement requests; cannot approve/advance/delete requests.
+
+Important behavior:
+- The sidebar is role-filtered. If you do not have permission for a module, the module link is hidden.
+- Module-level access is enforced server-side too, not only in the UI.
+
+======================================================================
+2) GLOBAL BUTTONS (AVAILABLE ACROSS MODULE PAGES)
+======================================================================
+
+Navigation and layout:
+- Sidebar module links: Opens selected module page.
+- Sidebar toggle button: Collapse/expand sidebar.
+- Mobile nav toggle button: Opens/closes sidebar on small screens.
+
+Notifications:
+- Notification bell button: Opens notifications panel.
+- Mark all as read button: Marks all notifications as read and refreshes badge count.
+
+User menu:
+- User menu button (avatar/name area): Opens/closes user dropdown.
+- Logout button: Ends session and redirects to app index/login flow.
+
+Modal behavior:
+- Any close button in modal (data-close-modal): Closes the target modal.
+- Clicking backdrop outside modal content: Closes modal.
+- ESC key: Closes any open modal.
+
+======================================================================
+3) MODULE-BY-MODULE BUTTON GUIDE
+======================================================================
+
+----------------------------------------------------------------------
+A) DASHBOARD (dashboard.html)
+----------------------------------------------------------------------
+Purpose:
+- Shows real-time summary cards, charts, recent transactions, and pending actions.
+
+Buttons:
+- No module-specific write buttons here.
+- Uses only global shell buttons (notifications, user menu, logout, nav).
+
+What it auto-renders:
+- Summary KPIs: revenue, expenses, net income, receivables/payables, funds, assets, budget utilization.
+- Charts: revenue vs expenses, funds split, budget vs actual, AP aging, AR aging.
+- Recent transactions table and pending action list.
+
+----------------------------------------------------------------------
+B) BUDGET PLANNING (budget.html)
+----------------------------------------------------------------------
+Main actions:
+- Add Budget button (addBudgetBtn)
+  Action: Opens Create Budget modal.
+- Edit button (per budget card)
+  Action: Opens Edit Budget modal with selected record prefilled.
+- Delete button (per budget card)
+  Action: Confirmation prompt, then deletes selected budget.
+
+Form action:
+- Budget form Submit
+  Action: Creates new budget or updates existing budget depending on hidden budgetId.
+
+Filters:
+- Search, Fiscal Year filter, Department filter, Status filter
+  Action: Live re-renders cards.
+- Reset Filters button (budgetResetFilters)
+  Action: Clears all budget filters and reloads full list.
+
+Permission-gated buttons:
+- Edit appears only with edit_budget.
+- Delete appears only with delete_budget.
+
+----------------------------------------------------------------------
+C) REVENUE MANAGEMENT (revenue.html)
+----------------------------------------------------------------------
+Main actions:
+- Add Revenue button (addRevenueBtn)
+  Action: Opens Add Revenue modal.
+- View button (per row)
+  Action: Opens read-only Revenue details modal.
+- Edit button (per row)
+  Action: Opens Edit Revenue modal.
+- Delete button (per row)
+  Action: Confirmation prompt, then deletes record.
+
+Form action:
+- Revenue form Submit
+  Action: Creates or updates revenue record.
+
+Export:
+- Export button (exportRevenueBtn)
+  Action: Downloads current filtered table as revenue-export.csv.
+
+Filters:
+- Search, Type, Department, Status, Date
+  Action: Live filtering and KPI refresh.
+- Reset Filters button (revenueResetFilters)
+  Action: Clears all revenue filters.
+
+Permission-gated buttons:
+- Edit appears only with edit_revenue.
+- Delete appears only with delete_revenue.
+
+----------------------------------------------------------------------
+D) EXPENSES & DISBURSEMENTS (expenses.html)
+----------------------------------------------------------------------
+Main actions:
+- Add Expense button (addExpenseBtn)
+  Action: Opens Add Expense modal.
+- View button (per row)
+  Action: Opens read-only Expense details modal.
+- Edit button (per row)
+  Action: Opens Edit Expense modal.
+- Delete button (per row)
+  Action: Confirmation prompt, then deletes record.
+
+Form action:
+- Expense form Submit
+  Action: Creates or updates expense record.
+
+Export:
+- Export button (exportExpenseBtn)
+  Action: Downloads current filtered table as expense-export.csv.
+
+Filters:
+- Search, Category, Department, Status
+  Action: Live filtering and KPI refresh.
+- Reset Filters button (expenseResetFilters)
+  Action: Clears all expense filters.
+
+Permission-gated buttons:
+- Edit appears only with edit_expense.
+- Delete appears only with delete_expense.
+
+----------------------------------------------------------------------
+E) ACCOUNTS PAYABLE (accounts-payable.html)
+----------------------------------------------------------------------
+Main actions:
+- Add Payable button (addPayableBtn)
+  Action: Opens Add Payable modal.
+- Pay button (per row, unpaid only)
+  Action: Opens payment modal; records payment against outstanding balance.
+- Delete button (per row)
+  Action: Confirmation prompt, then deletes payable.
+
+Form actions:
+- Payable form Submit
+  Action: Creates payable entry.
+- AP payment form Submit
+  Action: Records payable payment; validates payment <= outstanding balance.
+
+Filters:
+- Search, Department, Status
+  Action: Live filtering.
+- Reset Filters button (apResetFilters)
+  Action: Clears AP filters.
+
+Permission-gated buttons:
+- Pay appears only with record_payable_payment.
+- Delete appears only with delete_accounts_payable.
+
+----------------------------------------------------------------------
+F) ACCOUNTS RECEIVABLE (accounts-receivable.html)
+----------------------------------------------------------------------
+Main actions:
+- Add Receivable button (addReceivableBtn)
+  Action: Opens Add Receivable modal.
+- Collect button (per row, unpaid only)
+  Action: Opens collection modal; records payment received.
+- Delete button (per row)
+  Action: Confirmation prompt, then deletes receivable.
+
+Form actions:
+- Receivable form Submit
+  Action: Creates receivable entry.
+- AR payment form Submit
+  Action: Records collection; validates amount <= outstanding balance.
+
+Filters:
+- Search, Status
+  Action: Live filtering.
+- Reset Filters button (arResetFilters)
+  Action: Clears AR filters.
+
+Permission-gated buttons:
+- Collect appears only with record_receivable_payment.
+- Delete appears only with delete_accounts_receivable.
+
+----------------------------------------------------------------------
+G) FUND MANAGEMENT (funds.html)
+----------------------------------------------------------------------
+Main actions:
+- Add Fund button (addFundBtn)
+  Action: Opens Add Fund modal.
+- Allocate button (per fund)
+  Action: Opens allocation modal; records allocation from remaining balance.
+- Delete button (per fund)
+  Action: Confirmation prompt, then deletes fund.
+
+Form actions:
+- Fund form Submit
+  Action: Creates fund.
+- Allocate form Submit
+  Action: Allocates amount from selected fund; validates amount <= remaining.
+
+Permission-gated buttons:
+- Allocate appears only with allocate_funds.
+- Delete appears only with delete_fund.
+
+----------------------------------------------------------------------
+H) PROCUREMENT & REQUESTS (procurement.html)
+----------------------------------------------------------------------
+Main actions:
+- Add Request button (addRequestBtn)
+  Action: Opens procurement request modal.
+- Submit Request (prForm submit)
+  Action: Creates procurement request.
+
+Review/workflow actions (role-dependent, per request card):
+- Review button
+  Action: Opens review modal for pending request.
+- Approve button (inside review modal)
+  Action: Approves request and saves remarks.
+- Reject button (inside review modal)
+  Action: Rejects request and saves remarks.
+- Start Processing button
+  Action: Moves request status from Approved -> Procurement Processing.
+- Mark Completed button
+  Action: Moves request status from Procurement Processing -> Completed.
+- Delete button
+  Action: Confirmation prompt, then deletes request.
+
+Tabs and filters:
+- Status tabs (Pending Review, Approved, etc.)
+  Action: Filters cards by workflow state.
+- Search and Type filter
+  Action: Live filtering.
+- Reset Filters button (prResetFilters)
+  Action: Clears search/type filters.
+
+Permission-gated actions:
+- Review/Approve/Reject requires approve_procurement_request.
+- Start Processing / Mark Completed requires advance_procurement_request.
+- Delete requires delete_procurement_request.
+- Employees generally only submit and view their own requests.
+
+----------------------------------------------------------------------
+I) ASSETS & DEPRECIATION (assets.html)
+----------------------------------------------------------------------
+Main actions:
+- Add Asset button (addAssetBtn)
+  Action: Opens Add Asset modal.
+- View button (per row)
+  Action: Opens read-only detailed asset/depreciation modal.
+- Edit button (per row)
+  Action: Opens Edit Asset modal.
+- Delete button (per row)
+  Action: Confirmation prompt, then deletes asset.
+
+Form action:
+- Asset form Submit
+  Action: Creates or updates asset record.
+
+Filters:
+- Search, Category, Department
+  Action: Live filtering.
+- Reset Filters button (assetResetFilters)
+  Action: Clears filters.
+
+Permission-gated buttons:
+- Edit appears only with edit_asset.
+- Delete appears only with delete_asset.
+
+----------------------------------------------------------------------
+J) FINANCIAL REPORTS (reports.html)
+----------------------------------------------------------------------
+Main actions:
+- Report tabs (Income Statement, Budget vs Actual, Aging, Cash Flow, Expense Report, Revenue Report)
+  Action: Switches visible report panel.
+- Print button (printReportBtn)
+  Action: Opens browser print flow for current report page.
+
+Expense report controls:
+- Date/Department/Category filters
+  Action: Refreshes expense report table.
+- Reset button (expReportReset)
+  Action: Clears expense report filters.
+- Export button (expReportExport)
+  Action: Downloads filtered expense report CSV.
+
+Revenue report controls:
+- Date/Department/Type filters
+  Action: Refreshes revenue report table.
+- Reset button (revReportReset)
+  Action: Clears revenue report filters.
+- Export button (revReportExport)
+  Action: Downloads filtered revenue report CSV.
+
+----------------------------------------------------------------------
+K) SECURITY & AUDIT TRAIL (audit.html)
+----------------------------------------------------------------------
+Main actions:
+- Export button (exportAuditBtn)
+  Action: Downloads filtered audit logs as audit-log.csv.
+
+Filters:
+- Search, Module filter, Role filter
+  Action: Live filtering.
+- Reset Filters button (auditResetFilters)
+  Action: Clears audit filters.
+
+Important:
+- This module is read-only by design. No create/edit/delete buttons.
+
+======================================================================
+4) VALIDATION, CONFIRMATIONS, AND COMMON FEEDBACK
+======================================================================
+
+- Required field checks run on forms before submission.
+- Positive-number checks run on numeric fields marked as positive.
+- Date consistency checks run where min date is enforced.
+- Destructive actions (Delete) require confirmation dialog.
+- Success and error messages are shown via toast notifications.
+- Empty data/filter results show an empty state card/message.
+
+======================================================================
+5) QUICK ROLE-TO-MODULE SUMMARY
+======================================================================
+
+Administrator
+- Can open all modules.
+- Can perform all create/edit/delete/approve/advance/pay/collect/export actions.
+
+Accountant
+- Can fully manage finance modules (Budget, Revenue, Expenses, AP, AR, Funds, Assets, Reports).
+- Can also perform procurement workflow actions in current permission set.
+- Cannot access Security & Audit Trail.
+
+College Administrator
+- Primarily view-focused: Dashboard, Budget view, Procurement visibility, Reports.
+- No direct financial CRUD in revenue/expense/AP/AR/funds/assets.
+
+Employee
+- Dashboard + Procurement request submission workflow.
+- No approval/processing/deletion controls.
+
+======================================================================
+END OF GUIDE
+======================================================================

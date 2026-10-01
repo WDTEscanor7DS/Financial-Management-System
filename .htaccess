@@ -1,0 +1,16 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /Financial-Management-System/
+
+    # Special case: /public/app/index.php does not exist; serve index.html.
+    RewriteRule ^public/app/index\.php$ public/app/index.html [L,R=302]
+
+    # Let existing files/directories pass through unchanged.
+    RewriteCond %{REQUEST_FILENAME} -f [OR]
+    RewriteCond %{REQUEST_FILENAME} -d
+    RewriteRule ^ - [L]
+
+    # Route everything else through the public web root, not index.php/$1.
+    RewriteRule ^(.*)$ public/$1 [L]
+
+</IfModule>

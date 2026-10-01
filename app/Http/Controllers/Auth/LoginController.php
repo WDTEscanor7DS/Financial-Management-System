@@ -31,7 +31,14 @@ class LoginController extends Controller
 
         AuditService::log('Login', 'Security & Audit', null, $user->name . ' (' . $user->role->name . ') signed in.');
 
-        return redirect()->intended(route('dashboard'));
+        $scriptDir = rtrim(str_replace('\\', '/', dirname((string) $request->server('SCRIPT_NAME', '/'))), '/');
+        $basePath = ($scriptDir === '' || $scriptDir === '.') ? '' : $scriptDir;
+        $dashboardUrl = $request->getSchemeAndHttpHost() . $basePath . '/app/pages/dashboard.html?v=20260827';
+
+        // Avoid stale session "intended" values from prior bad URLs.
+        $request->session()->forget('url.intended');
+
+        return redirect()->to($dashboardUrl);
     }
 
     public function destroy(Request $request)

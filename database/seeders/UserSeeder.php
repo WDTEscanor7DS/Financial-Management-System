@@ -37,10 +37,10 @@ class UserSeeder extends Seeder
         $registrar = Department::where('name', 'Registrar')->firstOrFail();
 
         $accounts = [
-            ['name' => 'Rafael M. Osorio', 'email' => 'admin@example.test', 'role' => 'administrator', 'department_id' => $financeOffice->id],
-            ['name' => 'Dianne C. Torralba', 'email' => 'accountant@example.test', 'role' => 'accountant', 'department_id' => $financeOffice->id],
-            ['name' => 'Dr. Emilio S. Ferrer', 'email' => 'collegeadmin@example.test', 'role' => 'college-administrator', 'department_id' => null],
-            ['name' => 'Kristine Joy A. Panganiban', 'email' => 'employee@example.test', 'role' => 'employee', 'department_id' => $registrar->id],
+            ['name' => 'Administrator', 'email' => 'admin@example.test', 'role' => 'administrator', 'department_id' => $financeOffice->id],
+            ['name' => 'Accountant', 'email' => 'accountant@example.test', 'role' => 'accountant', 'department_id' => $financeOffice->id],
+            ['name' => 'College Administrator', 'email' => 'collegeadmin@example.test', 'role' => 'college-administrator', 'department_id' => null],
+            ['name' => 'Employee', 'email' => 'employee@example.test', 'role' => 'employee', 'department_id' => $registrar->id],
         ];
 
         foreach ($accounts as $account) {
